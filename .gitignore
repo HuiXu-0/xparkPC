@@ -1,0 +1,21 @@
+# 运行期数据：配置、会话、知识库、日志、备份、上传文件
+data/
+
+# 密钥与访问令牌（绝不入库）
+*.enc
+*.key
+api_key*
+access_token*
+*.log
+
+# WorkBuddy 工作区内部数据
+.workbuddy/
+
+# 编辑器 / 系统 / 缓存
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+node_modules/

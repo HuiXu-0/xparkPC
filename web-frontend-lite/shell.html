@@ -1,0 +1,44 @@
+<div class="shell">
+  <div class="menu-backdrop" id="backdrop"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo" data-icon="spark"></div>
+      <div><strong>Spark Chat</strong><small>端侧大模型工作台</small></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-label">最近会话</div>
+    <div class="history-list" id="history"></div>
+    <div class="side-bottom">
+      <div class="local-note"><strong>数据留在本地</strong>模型走本机推理服务，会话与资料保存在 data/ 目录。</div>
+      <button class="icon-btn full" data-page="settings"><span data-icon="settings"></span>　偏好设置</button>
+      <div class="profile"><span class="avatar">S</span><div>本地工作空间<small style="display:block">无需账户登录</small></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-menu" id="menu" aria-label="打开导航"><span data-icon="menu"></span></button>
+      <div class="breadcrumb">个人工作空间 <b id="crumb">/ 工作台</b></div>
+      <div class="top-actions">
+        <span class="chip"><span class="dot green"></span>本地优先</span>
+        <span class="chip" id="topState"><span class="dot"></span>服务检测中</span>
+        <button class="icon-btn" id="theme" aria-label="切换深浅主题"><span data-icon="moon"></span></button>
+        <button class="icon-btn" data-page="settings" aria-label="设置"><span data-icon="settings"></span></button>
+      </div>
+    </header>
+    <div class="workspace">
+      <div class="demo-note" id="notice" hidden><i></i><span id="noticeText"></span></div>
+      <div class="layout">
+        <main id="content"></main>
+        <aside class="right" id="right"></aside>
+      </div>
+      <footer class="footer">Spark Chat · 端侧模型回答请自行核验，重要信息以权威来源为准。</footer>
+    </div>
+  </div>
+</div>
+<dialog id="confirmDialog">
+  <h3 id="confirmTitle">确认操作</h3>
+  <p id="confirmText"></p>
+  <div class="dialog-buttons"><button class="btn outline" id="confirmCancel">取消</button><button class="btn primary" id="confirmOk">确认</button></div>
+</dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+<input type="file" id="fileInput" accept=".txt,.md,.csv,.pdf,.docx,.xlsx,.json" multiple hidden>

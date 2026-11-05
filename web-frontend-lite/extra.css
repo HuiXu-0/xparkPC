@@ -1,0 +1,38 @@
+
+/* --- 接入真实后端后新增的样式，保持与原型同一套变量与配色 --- */
+select.search{height:44px;padding:0 12px;margin:12px 0}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.row>*{min-width:0}
+.grow{flex:1;min-width:120px}
+.small{font-size:11px;color:var(--muted)}
+.muted{color:var(--muted)}
+.badge{display:inline-block;padding:1px 9px;border-radius:99px;background:var(--soft);color:var(--purple);font-size:10px;white-space:nowrap}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.event{padding:9px 13px;border-left:2px solid var(--purple);background:var(--soft);border-radius:0 8px 8px 0;margin:9px 0;font-size:12px;line-height:1.7}
+.event b{color:var(--purple);font-weight:500}
+.event.ok{border-left-color:var(--green)}
+.event.err{border-left-color:#d8635f}
+.event pre{margin:5px 0 0;white-space:pre-wrap;word-break:break-word;font:11px/1.65 inherit;color:var(--muted)}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:11px;margin:14px 0}
+.stat>div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:11px;color:var(--muted)}
+.stat strong{display:block;font-size:18px;color:var(--ink);font-weight:500;margin-top:3px}
+.logbox{max-height:300px;overflow:auto;font:11px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;white-space:pre-wrap;word-break:break-word}
+.logbox div{border-bottom:1px solid var(--line);padding:3px 0}
+.logbox div:last-child{border-bottom:0}
+.setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+.setting-grid .form-row{min-width:0}
+.setting-grid input,.setting-grid select{width:170px;max-width:100%}
+.form-row label{display:block;font-size:13px}
+.form-row small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.form-row input[type=text],.form-row input[type=number],.form-row input[type=password]{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.form-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--purple)}
+.file-row,.recent-item{flex-wrap:wrap}
+.file-row>div{min-width:0;flex:1}
+.search-results .file-row:last-child{border-bottom:0}
+.model-list{max-height:230px;overflow:auto}
+.model-list button{display:block;width:100%;text-align:left;background:none;padding:8px 10px;border-radius:7px;font-size:12px}
+.model-list button:hover,.model-list button.on{background:var(--soft);color:var(--purple)}
+.model-list small{display:block;color:var(--muted);font-size:10px}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid var(--soft);border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:680px){.setting-grid{grid-template-columns:1fr}.setting-grid input,.setting-grid select{width:100%}}

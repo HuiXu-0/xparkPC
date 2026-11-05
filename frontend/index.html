@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spark Chat · 端侧大模型工作台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237460e8'/%3E%3Cpath d='M16 5l3 8 8 3-8 3-3 8-3-8-8-3 8-3z' fill='%23fff'/%3E%3C/svg%3E">
+<script>try{if(localStorage.getItem('spark-theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}</script>
+<style>
+:root{--bg:#f6f7fb;--panel:#fff;--side:#fbfbfe;--ink:#22263d;--muted:#85899f;--line:#e9eaf2;--purple:#7460e8;--soft:#f0edff;--green:#23a984;--shadow:0 8px 32px #24254a05}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);font:14px/1.65 -apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft YaHei',sans-serif;color:var(--ink)}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}button:disabled{opacity:.48;cursor:not-allowed}button:focus-visible,a:focus-visible{outline:3px solid #aea3ff;outline-offset:3px}button{border:0}svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.shell{display:grid;grid-template-columns:232px 1fr;min-height:100vh}.sidebar{position:fixed;width:232px;inset:0 auto 0 0;background:var(--side);border-right:1px solid var(--line);padding:30px 18px 20px;display:flex;flex-direction:column;z-index:20}.brand{display:flex;align-items:center;gap:11px;padding:0 10px 31px}.logo{width:38px;height:38px;display:grid;place-items:center;background:linear-gradient(140deg,#9d85ff,#6b53dc);border-radius:12px;color:white;box-shadow:0 4px 12px #765ce630}.brand strong{font-size:19px;letter-spacing:-.5px}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:1px}.nav{display:grid;gap:7px}.nav button{display:flex;align-items:center;gap:13px;padding:12px 16px;border-radius:10px;background:none;color:#73788d;text-align:left}.nav button.active{background:var(--soft);color:var(--purple);font-weight:650}.nav button:hover{background:var(--soft)}.nav .tag{margin-left:auto;font-size:10px;background:#e7e1ff;padding:0 7px;border-radius:4px}.side-label{font-size:11px;color:#aaaec0;margin:30px 16px 10px;letter-spacing:1px}.history-list{display:grid;gap:4px}.history-list button{background:none;text-align:left;color:var(--muted);padding:9px 16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;border-radius:7px}.history-list button:hover{background:var(--soft)}.side-bottom{margin-top:auto;padding-top:28px}.local-note{padding:15px;border:1px solid var(--line);border-radius:12px;font-size:12px;color:var(--muted);margin-bottom:17px}.local-note strong{display:block;color:var(--ink);margin-bottom:4px}.profile{display:flex;align-items:center;gap:10px;padding:10px}.avatar{width:32px;height:32px;background:#e7e3fb;color:var(--purple);border-radius:50%;display:grid;place-items:center;font-weight:600}.profile small{color:var(--muted)}.main{grid-column:2;min-width:0}.topbar{height:78px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 38px;background:var(--panel)}.breadcrumb{color:var(--muted);font-size:12px}.breadcrumb b{color:var(--ink);font-weight:500;margin-left:14px}.top-actions{display:flex;align-items:center;gap:14px}.chip{font-size:11px;border-radius:20px;background:var(--bg);padding:5px 10px;color:var(--muted);border:1px solid var(--line);display:inline-flex;align-items:center;gap:7px}.dot{width:7px;height:7px;background:#a3a8b7;border-radius:50%;display:inline-block}.dot.green{background:var(--green);box-shadow:0 0 0 4px #22b88b10}.icon-btn{background:none;padding:7px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}.icon-btn:hover{background:var(--soft);color:var(--purple)}.mobile-menu{display:none}.workspace{padding:30px 38px;max-width:1660px;margin:auto}.demo-note{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:7px;margin-bottom:26px}.demo-note i{width:6px;height:6px;background:#a6a0bd;border-radius:50%}.layout{display:grid;grid-template-columns:minmax(0,1fr) 292px;gap:26px;align-items:start}.hero{padding:12px 0 29px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--purple);font-weight:600}.hero h1{font-size:33px;line-height:1.4;margin:9px 0 11px;font-weight:700;letter-spacing:-1px}.hero h1 em{font-style:normal;color:var(--purple)}.hero p{margin:0;color:var(--muted);font-size:13px}.spark-label{display:inline-flex;align-items:center;gap:6px;color:var(--purple);font-size:11px}.composer{background:var(--panel);border:1px solid #dcd6f8;border-radius:18px;padding:19px 21px;box-shadow:0 9px 35px #7260c40a}.composer textarea{width:100%;border:0;background:none;resize:vertical;min-height:105px;max-height:260px;outline:none;color:var(--ink);font-size:15px;line-height:1.8}.composer textarea::placeholder{color:#a7aabc}.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid var(--line)}.composer-left{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:11px}.btn{padding:10px 15px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:12px;font-weight:600;background:var(--soft);color:var(--purple);white-space:nowrap}.btn.primary{background:var(--purple);color:white;box-shadow:0 4px 12px #7460e822}.btn.outline{background:var(--panel);border:1px solid var(--line);color:var(--muted)}.btn svg{width:16px;height:16px}.full{width:100%}.suggestions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.suggestions button{font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 11px}.suggestions button:hover{color:var(--purple);border-color:#c0b4f6}.section-head{display:flex;justify-content:space-between;align-items:center;margin:31px 0 14px}.section-head h2{font-size:15px;margin:0}.section-head span{font-size:11px;color:var(--muted)}.features{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.feature{background:var(--panel);border:1px solid var(--line);border-radius:13px;text-align:left;padding:19px;display:flex;gap:13px;align-items:flex-start;transition:transform .2s,border-color .2s}.feature:hover{transform:translateY(-3px);border-color:#cbbff6}.feature-icon{width:39px;height:39px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:#f0ecff;color:#8c6fe0}.feature:nth-child(2) .feature-icon{background:#fff1e8;color:#dc9b6a}.feature:nth-child(3) .feature-icon{background:#eaf7f4;color:#55a89e}.feature:nth-child(4) .feature-icon{background:#edf3ff;color:#7093d7}.feature strong{font-size:14px}.feature p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.8}.feature .arrow{margin-left:auto;color:#b7bacb;font-size:18px}.recent{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden}.recent-item{padding:15px 18px;display:flex;align-items:center;gap:13px;border-bottom:1px solid var(--line)}.recent-item:last-child{border-bottom:0}.recent-item .round{width:30px;height:30px;border-radius:8px;background:var(--soft);color:var(--purple);display:grid;place-items:center}.recent-item strong{font-size:12px;font-weight:500}.recent-item small{display:block;color:var(--muted);font-size:10px}.recent-item button{margin-left:auto;background:none;color:var(--purple);font-size:11px}.empty-recent{padding:23px;color:var(--muted);font-size:12px}.right{display:grid;gap:17px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:20px}.model-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.model-head h2{font-size:14px;margin:0}.model-symbol{width:47px;height:47px;background:var(--soft);color:var(--purple);border-radius:13px;display:grid;place-items:center;margin-bottom:13px}.model-symbol svg{width:26px;height:26px}.model-name{font-size:15px;font-weight:650;letter-spacing:-.3px}.model-version{font-size:11px;color:var(--muted);margin:4px 0 17px}.model-status{display:flex;align-items:center;gap:8px;font-size:12px}.model-description{color:var(--muted);font-size:11px;line-height:1.8;margin:9px 0 15px}.progress{height:4px;background:var(--line);border-radius:8px;overflow:hidden;margin:12px 0}.progress div{height:100%;background:var(--purple);transition:width .2s}.specs{display:grid;gap:12px;border-top:1px solid var(--line);margin-top:17px;padding-top:15px;font-size:11px}.specs div{display:flex;justify-content:space-between;color:var(--muted)}.specs b{color:var(--ink);font-weight:500}.memory{background:var(--bg);padding:13px;border-radius:9px;margin-top:17px}.memory label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}.memory strong{font-size:18px;color:var(--ink)}.memory small{font-size:10px;color:var(--muted)}.release{margin-top:9px}.right h3{font-size:12px;margin:0 0 13px}.step{display:flex;align-items:flex-start;gap:10px;margin-top:13px;font-size:11px;color:var(--muted)}.step b{color:var(--ink);font-weight:500}.step .num{font-size:10px;background:var(--soft);color:var(--purple);width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}.privacy{display:flex;gap:9px;color:var(--muted);font-size:11px;padding:0 4px}.privacy svg{color:var(--green)}.footer{margin-top:29px;color:#a1a6b7;font-size:10px;text-align:center}.page-title{font-size:27px;margin:8px 0}.lead{color:var(--muted);margin-bottom:23px}.chat-log{height:440px;overflow:auto;padding:10px 6px;display:flex;flex-direction:column;gap:17px}.message{max-width:90%;padding:14px 17px;border-radius:13px;background:var(--panel);border:1px solid var(--line);white-space:pre-wrap;line-height:1.9}.message.user{align-self:flex-end;background:var(--soft);border:0}.message small{display:block;font-size:10px;color:var(--purple);margin-bottom:5px}.info{border:1px solid var(--line);background:var(--panel);padding:18px;border-radius:12px;color:var(--muted);font-size:12px}.file-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);gap:10px}.file-row:last-child{border:0}.file-row strong{display:block;color:var(--ink);font-size:13px;word-break:break-all}.file-row small{color:var(--muted)}.form-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 0;border-bottom:1px solid var(--line)}.form-row small{color:var(--muted);display:block}.form-row select{padding:7px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink)}.search{width:100%;padding:12px 15px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);margin:15px 0}.task-progress{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}.task-progress i{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--purple);font-style:normal}.task-progress small{color:var(--muted);margin-left:auto}.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:12px 23px;border-radius:10px;z-index:100;box-shadow:0 8px 35px #0002;max-width:90%;font-size:12px}.toast[hidden]{display:none}dialog{border:1px solid var(--line);border-radius:18px;padding:27px;max-width:420px;background:var(--panel);color:var(--ink);box-shadow:0 20px 90px #12173030}dialog::backdrop{background:#15192f50;backdrop-filter:blur(3px)}dialog h3{margin-top:0}dialog p{color:var(--muted);font-size:13px}.dialog-buttons{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}.dark{--bg:#171923;--panel:#202330;--side:#1b1e2a;--ink:#e5e8f5;--muted:#979cb4;--line:#323647;--soft:#302b48;--purple:#b0a0ff;--shadow:0 8px 32px #0001}.dark .primary{color:#171923}.dark .feature-icon{background:#302b48}.menu-backdrop{display:none}@media(min-width:1650px){.workspace{padding-top:43px}.hero{padding-top:25px}.hero h1{font-size:39px}.composer textarea{min-height:130px}.feature{padding:25px}.chat-log{height:500px}}@media(max-width:1150px){.layout{grid-template-columns:minmax(0,1fr) 260px;gap:18px}.workspace{padding:25px}.sidebar{width:204px}.shell{grid-template-columns:204px 1fr}.feature{padding:15px}.hero h1{font-size:29px}.composer-bottom{align-items:flex-end}.composer-left span{display:none}}@media(max-width:950px){.layout{grid-template-columns:1fr}.right{grid-template-columns:1fr 1fr}.privacy{grid-column:1/-1}.model-head{margin-bottom:12px}.model-symbol{display:none}.topbar{padding:0 25px}.model-description{margin-bottom:10px}.right .steps-panel{align-self:start}.features{gap:12px}}@media(max-width:680px){.shell{display:block}.sidebar{transform:translateX(-100%);transition:transform .2s;width:232px}.sidebar.open{transform:none}.menu-backdrop.open{display:block;position:fixed;inset:0;background:#10152b60;z-index:19}.mobile-menu{display:inline-flex}.topbar{height:65px;padding:0 17px}.topbar .breadcrumb{display:none}.top-actions{gap:7px;margin-left:auto}.chip{font-size:10px}.workspace{padding:20px 17px}.demo-note{margin-bottom:16px;font-size:10px}.hero{padding:8px 0 23px}.hero h1{font-size:28px}.hero p{font-size:12px}.right{grid-template-columns:1fr}.right .steps-panel{display:none}.features{grid-template-columns:1fr 1fr}.feature{display:block;padding:15px}.feature-icon{width:32px;height:32px;margin-bottom:11px}.feature .arrow{display:none}.feature p{font-size:10px}.feature strong{font-size:13px}.composer{padding:15px}.composer textarea{font-size:13px;min-height:100px}.composer-bottom{flex-wrap:wrap}.composer-left{display:none}.composer-bottom>div:last-child{display:flex;width:100%;gap:8px;justify-content:flex-end}.btn{padding:9px 12px}.hero h1 em{display:inline}.right{margin-top:5px}.chat-log{height:390px}.page-title{font-size:24px}.section-head{margin-top:25px}.form-row{align-items:flex-start}.footer{font-size:10px}.model-head{margin-bottom:15px}}
+/* --- 接入真实后端后新增的样式，保持与原型同一套变量与配色 --- */
+select.search{height:44px;padding:0 12px;margin:12px 0}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.row>*{min-width:0}
+.grow{flex:1;min-width:120px}
+.small{font-size:11px;color:var(--muted)}
+.muted{color:var(--muted)}
+.badge{display:inline-block;padding:1px 9px;border-radius:99px;background:var(--soft);color:var(--purple);font-size:10px;white-space:nowrap}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.event{padding:9px 13px;border-left:2px solid var(--purple);background:var(--soft);border-radius:0 8px 8px 0;margin:9px 0;font-size:12px;line-height:1.7}
+.event b{color:var(--purple);font-weight:500}
+.event.ok{border-left-color:var(--green)}
+.event.err{border-left-color:#d8635f}
+.event pre{margin:5px 0 0;white-space:pre-wrap;word-break:break-word;font:11px/1.65 inherit;color:var(--muted)}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:11px;margin:14px 0}
+.stat>div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:11px;color:var(--muted)}
+.stat strong{display:block;font-size:18px;color:var(--ink);font-weight:500;margin-top:3px}
+.logbox{max-height:300px;overflow:auto;font:11px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;white-space:pre-wrap;word-break:break-word}
+.logbox div{border-bottom:1px solid var(--line);padding:3px 0}
+.logbox div:last-child{border-bottom:0}
+.setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+.setting-grid .form-row{min-width:0}
+.setting-grid input,.setting-grid select{width:170px;max-width:100%}
+.form-row label{display:block;font-size:13px}
+.form-row small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.form-row input[type=text],.form-row input[type=number],.form-row input[type=password]{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.form-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--purple)}
+.file-row,.recent-item{flex-wrap:wrap}
+.file-row>div{min-width:0;flex:1}
+.search-results .file-row:last-child{border-bottom:0}
+.model-list{max-height:230px;overflow:auto}
+.model-list button{display:block;width:100%;text-align:left;background:none;padding:8px 10px;border-radius:7px;font-size:12px}
+.model-list button:hover,.model-list button.on{background:var(--soft);color:var(--purple)}
+.model-list small{display:block;color:var(--muted);font-size:10px}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid var(--soft);border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:680px){.setting-grid{grid-template-columns:1fr}.setting-grid input,.setting-grid select{width:100%}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="menu-backdrop" id="backdrop"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo" data-icon="spark"></div>
+      <div><strong>Spark Chat</strong><small>端侧大模型工作台</small></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-label">最近会话</div>
+    <div class="history-list" id="history"></div>
+    <div class="side-bottom">
+      <div class="local-note"><strong>数据留在本地</strong>模型走本机推理服务，会话与资料保存在 data/ 目录。</div>
+      <button class="icon-btn full" data-page="settings"><span data-icon="settings"></span>　偏好设置</button>
+      <div class="profile"><span class="avatar">S</span><div>本地工作空间<small style="display:block">无需账户登录</small></div></div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-menu" id="menu" aria-label="打开导航"><span data-icon="menu"></span></button>
+      <div class="breadcrumb">个人工作空间 <b id="crumb">/ 工作台</b></div>
+      <div class="top-actions">
+        <span class="chip"><span class="dot green"></span>本地优先</span>
+        <span class="chip" id="topState"><span class="dot"></span>服务检测中</span>
+        <button class="icon-btn" id="theme" aria-label="切换深浅主题"><span data-icon="moon"></span></button>
+        <button class="icon-btn" data-page="settings" aria-label="设置"><span data-icon="settings"></span></button>
+      </div>
+    </header>
+    <div class="workspace">
+      <div class="demo-note" id="notice" hidden><i></i><span id="noticeText"></span></div>
+      <div class="layout">
+        <main id="content"></main>
+        <aside class="right" id="right"></aside>
+      </div>
+      <footer class="footer">Spark Chat · 端侧模型回答请自行核验，重要信息以权威来源为准。</footer>
+    </div>
+  </div>
+</div>
+<dialog id="confirmDialog">
+  <h3 id="confirmTitle">确认操作</h3>
+  <p id="confirmText"></p>
+  <div class="dialog-buttons"><button class="btn outline" id="confirmCancel">取消</button><button class="btn primary" id="confirmOk">确认</button></div>
+</dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+<input type="file" id="fileInput" accept=".txt,.md,.csv,.pdf,.docx,.xlsx,.json" multiple hidden>
+<script>
+'use strict';
+/* Spark Chat 工作台 · 样式沿用 SparkChat_工作台优化版.html
+   数据层改为对接便携版本地 FastAPI 服务（同源 /api/*），无模拟数据。
+   源码：web-frontend-lite/，构建产物：frontend/index.html */
+
+const PATHS = {
+  spark: 'M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z',
+  home: 'M3 10l9-7 9 7M5 9v12h5v-7h4v7h5V9',
+  chat: 'M21 11a8 8 0 01-8 8H6l-4 3 1-6a8 8 0 118-13h2a8 8 0 018 8z',
+  task: 'M8 4H5v17h14V4h-3M8 2h8v5H8zM8 12l2 2 5-5M8 18h7',
+  book: 'M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3zM12 6v16',
+  tool: 'M14 3a6 6 0 00-7 7L2 15l4 4 5-5a6 6 0 007-7l-4 4-3-3 3-5z',
+  db: 'M20 5c0 2-4 3-8 3S4 7 4 5s4-3 8-3 8 1 8 3zM4 5v14c0 2 4 3 8 3s8-1 8-3V5M4 12c0 2 4 3 8 3s8-1 8-3',
+  settings: 'M10 2h4l1 3 3 1 3 3-2 3 1 3-3 3-3-1-3 2-3-2-3 1-3-3 1-3-1-3 3-3 3 1 1-3zM15 12a3 3 0 11-6 0 3 3 0 016 0',
+  moon: 'M20 15A8 8 0 119 3a7 7 0 0011 12z',
+  power: 'M12 2v10M6 5a9 9 0 1012 0',
+  stop: 'M5 5h14v14H5z',
+  cpu: 'M6 6h12v12H6zM9 9h6v6H9zM9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4',
+  shield: 'M12 2l8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4zM8 12l3 3 5-6',
+  plus: 'M12 4v16M4 12h16',
+  arrow: 'M5 12h14M13 6l6 6-6 6',
+  menu: 'M3 5h18M3 12h18M3 19h18',
+  upload: 'M12 16V3M7 8l5-5 5 5M4 15v6h16v-6',
+  file: 'M6 2h8l5 5v15H6zM14 2v6h5M9 12h7M9 16h7',
+  trash: 'M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14',
+  refresh: 'M20 11a8 8 0 10-2 6M20 5v6h-6'
+};
+const icon = n => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (PATHS[n] || PATHS.spark) + '"/></svg>';
+const icons = () => document.querySelectorAll('[data-icon]').forEach(e => { e.innerHTML = icon(e.dataset.icon); });
+const $ = id => document.getElementById(id);
+const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = v => { if (!v) return ''; const d = new Date(v); return isNaN(d) ? String(v) : d.toLocaleString('zh-CN'); };
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.tid); toast.tid = setTimeout(() => { t.hidden = true; }, 3800); }
+function notice(msg) { $('noticeText').textContent = msg || ''; $('notice').hidden = !msg; }
+
+const NAVS = [['home', 'home', '工作台'], ['chat', 'chat', '对话'], ['tasks', 'task', '智能任务'], ['knowledge', 'book', '知识库'], ['tools', 'tool', '工具中心'], ['storage', 'db', '数据维护']];
+const FEATURES = [
+  ['chat', 'chat', '自由对话', '解释知识、梳理思路，逐字流式输出与多轮上下文。'],
+  ['tasks', 'task', '智能任务', '把目标拆成可执行步骤，实时查看进度与最终报告。'],
+  ['knowledge', 'book', '本地知识库', '导入 PDF / Word / Excel / 文本，离线检索自己的资料。'],
+  ['tools', 'tool', '工具中心', '文件解析、数据概览、知识库检索与文档生成，按需开关。']
+];
+const TEMPLATES = [
+  ['写作润色', '请帮我润色以下文字，保持原意，使语言更清晰、自然：\n'],
+  ['学习讲解', '请用通俗易懂的语言解释以下知识点，并给出一个生活中的例子：\n'],
+  ['内容总结', '请将以下内容整理为核心观点、关键依据和后续行动：\n'],
+  ['计划制定', '请根据以下目标制定一个循序渐进、可执行的学习计划：\n']
+];
+const SUGGESTIONS = ['用通俗的语言解释机器学习', '帮我润色一段工作总结', '为我整理一份学习计划'];
+
+let PAGE = 'home', CURRENT = null, CHAT = [], SELMODEL = '', GENERATING = false, CTRL = null, TASKCTRL = null;
+let TOKEN = (() => { try { return localStorage.getItem('spark-access-token') || ''; } catch { return ''; } })();
+let CFG = {}, MODELS = [], SESSIONS = [], AGENTS = [], TOOLS = [], DEPS = {}, DOCS = [], KBSTAT = {}, TASKS = [], BACKUPS = [], SPACE = {}, PLUGINS = [], LOGS = [], HEALTH = null, ONLINE = false, TASK_EVENTS = [];
+
+/* ---------- 后端通信 ---------- */
+function errOf(j, status) {
+  const d = j && j.detail;
+  if (d && typeof d === 'object') return d.error || d.message || d.msg || ('请求失败 (' + status + ')');
+  if (typeof d === 'string' && d) return d;
+  return (j && (j.error || j.message)) || ('请求失败 (' + status + ')');
+}
+async function api(path, opts) {
+  const o = Object.assign({}, opts || {}), h = Object.assign({}, o.headers || {});
+  if (TOKEN) h.Authorization = 'Bearer ' + TOKEN;
+  if (o.json !== undefined) { h['Content-Type'] = 'application/json'; o.body = JSON.stringify(o.json); delete o.json; }
+  let r;
+  try { r = await fetch(path, Object.assign({}, o, { headers: h })); }
+  catch (e) { ONLINE = false; updateTop(); throw new Error('无法连接本地服务，请确认 SparkChat.exe 已启动'); }
+  let j = {}; try { j = await r.json(); } catch (e) { /* 非 JSON 响应 */ }
+  if (r.status === 401) { needToken(); throw new Error('访问令牌无效，请在「偏好设置」中填写'); }
+  if (!r.ok || (j && j.success === false)) throw new Error(errOf(j, r.status));
+  ONLINE = true; updateTop();
+  return (j && j.data !== undefined) ? j.data : j;
+}
+async function sse(path, payload, onEvent, signal, method) {
+  const h = { 'Content-Type': 'application/json' };
+  if (TOKEN) h.Authorization = 'Bearer ' + TOKEN;
+  const m = method || 'POST';
+  let r = await fetch(path, { method: m, headers: h, body: m === 'GET' ? undefined : JSON.stringify(payload || {}), signal });
+  if (r.status === 405 && m !== 'GET') {
+    r = await fetch(path, { method: 'GET', headers: TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}, signal });
+  }
+  if (r.status === 401) { needToken(); throw new Error('访问令牌无效'); }
+  if (!r.ok || !r.body) throw new Error('流式连接失败 (' + r.status + ')');
+  const reader = r.body.getReader(), dec = new TextDecoder();
+  let buf = '';
+  try {
+    for (;;) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      buf = (buf + dec.decode(chunk.value, { stream: true })).replace(/\r\n/g, '\n');
+      let i;
+      while ((i = buf.indexOf('\n\n')) >= 0) {
+        const block = buf.slice(0, i); buf = buf.slice(i + 2);
+        const line = block.split('\n').find(l => l.startsWith('data:'));
+        if (!line) continue;
+        const raw = line.slice(5).trim();
+        if (!raw || raw === '[DONE]') continue;
+        try { onEvent(JSON.parse(raw)); } catch (e) { /* 忽略心跳与非 JSON 行 */ }
+      }
+    }
+  } finally { try { reader.releaseLock(); } catch (e) { /* noop */ } }
+}
+function needToken() {
+  notice('服务要求访问令牌：请打开「偏好设置」，在“访问令牌”中填入启动日志里的令牌后重试。');
+  toast('需要访问令牌');
+}
+
+/* ---------- 数据加载 ---------- */
+function normalizeModels(v) {
+  const arr = Array.isArray(v) ? v : (v && Array.isArray(v.models) ? v.models : []);
+  return arr.map(x => typeof x === 'string'
+    ? { id: x, name: x, provider: '', capability: '' }
+    : { id: x.id || x.model_id || x.name, name: x.name || x.id, provider: x.provider || '', capability: x.capability || '' });
+}
+async function refreshCore() {
+  const [h, c, m, s] = await Promise.allSettled([api('/health'), api('/api/config'), api('/api/models'), api('/api/conversations')]);
+  if (h.status === 'fulfilled') { HEALTH = h.value; ONLINE = true; } else ONLINE = false;
+  if (c.status === 'fulfilled') CFG = c.value || {};
+  if (m.status === 'fulfilled') MODELS = normalizeModels(m.value);
+  if (s.status === 'fulfilled') SESSIONS = Array.isArray(s.value) ? s.value : [];
+  if (!SELMODEL) SELMODEL = CFG.model || 'spark-x2.5-4b';
+  updateTop();
+  if (!ONLINE) notice('本地服务未连接。请双击「启动 Spark Chat.bat」后刷新本页。');
+  else if (CFG.access_token_required && !TOKEN) notice('服务已开启访问令牌保护。如请求失败，请在「偏好设置」中填写令牌。');
+  else notice('');
+}
+const refreshSessions = async () => { try { SESSIONS = await api('/api/conversations'); } catch (e) { /* 保留旧数据 */ } };
+const refreshKB = async () => { const [a, b] = await Promise.allSettled([api('/api/kb'), api('/api/kb/status')]); if (a.status === 'fulfilled') DOCS = Array.isArray(a.value) ? a.value : []; if (b.status === 'fulfilled') KBSTAT = b.value || {}; };
+const refreshTasks = async () => { try { TASKS = await api('/api/tasks'); } catch (e) { /* noop */ } };
+const refreshTools = async () => { try { const r = await api('/api/tools'); TOOLS = (r && r.tools) || []; DEPS = (r && r.deps) || {}; } catch (e) { /* noop */ } };
+const refreshAgents = async () => { try { AGENTS = await api('/api/agents'); } catch (e) { /* noop */ } };
+const refreshPlugins = async () => { try { PLUGINS = await api('/api/plugins'); } catch (e) { /* noop */ } };
+const refreshBackups = async () => { try { BACKUPS = await api('/api/backup'); } catch (e) { /* noop */ } };
+const refreshSpace = async () => { try { const r = await api('/api/cleanup'); SPACE = (r && r.space) || r || {}; } catch (e) { /* noop */ } };
+const refreshLogs = async (q) => { try { const r = await api('/api/logs?page=1&page_size=60&level=all&search=' + encodeURIComponent(q || '')); LOGS = (r && r.logs) || []; } catch (e) { /* noop */ } };
+
+/* ---------- 通用渲染 ---------- */
+function modelName(id) { const m = MODELS.find(x => x.id === id); return m ? m.name : (id || 'Spark-X2.5-4B'); }
+function updateTop() {
+  const el = $('topState'); if (!el) return;
+  el.innerHTML = '<span class="dot ' + (ONLINE ? 'green' : '') + '"></span>' + (ONLINE ? '服务在线 · ' + MODELS.length + ' 个模型' : '服务未连接');
+}
+function renderHistory() {
+  const list = SESSIONS.slice(0, 6);
+  $('history').innerHTML = list.length
+    ? list.map(x => '<button data-session="' + esc(x.id) + '" title="' + esc(x.title) + '">' + esc(x.title || '新对话') + '</button>').join('')
+    : '<div style="font-size:11px;color:var(--muted);padding:9px 16px">开始对话后，会话将在此保存</div>';
+}
+function renderRight() {
+  const m = MODELS.find(x => x.id === SELMODEL) || MODELS[0] || {};
+  const cur = SESSIONS.find(x => x.id === CURRENT);
+  const steps = [['1', '确认推理端点', '设置中核对端侧服务地址'], ['2', '描述你的问题', '流式输出，可随时停止'], ['3', '继续或新建', '会话自动保存在本地']];
+  $('right').innerHTML = `
+    <section class="panel">
+      <div class="model-head"><h2>端侧模型</h2><span class="chip" style="padding:2px 8px;font-size:9px">SPARK-X2.5</span></div>
+      <div class="model-symbol" data-icon="cpu"></div>
+      <div class="model-name">${esc(m.name || 'Spark-X2.5-4B')}</div>
+      <div class="model-version">本机 OpenAI 兼容服务 · 免 API Key</div>
+      <div class="model-status"><span class="dot ${ONLINE ? 'green' : ''}" id="stateDot"></span><b id="stateText">${ONLINE ? '服务已连接' : '服务未连接'}</b></div>
+      <p class="model-description" id="stateDesc">推理端点 ${esc(CFG.spark_base_url || 'http://127.0.0.1:11434/v1')}</p>
+      <select class="search" id="modelSel" aria-label="选择模型">
+        ${MODELS.length ? MODELS.map(x => '<option value="' + esc(x.id) + '"' + (x.id === SELMODEL ? ' selected' : '') + '>' + esc(x.name) + '</option>').join('') : '<option value="">加载中…</option>'}
+      </select>
+      <button class="btn primary full" id="testConn">${icon('power')}测试连接</button>
+      <button class="btn outline full release" id="refreshAll">${icon('refresh')}刷新状态</button>
+      <div class="memory">
+        <label>当前会话 <small>自动保存在本地服务</small></label>
+        <strong style="font-size:14px">${esc(cur ? (cur.title || '新对话') : '新对话')}</strong>
+        <div class="progress"><div style="width:${SESSIONS.length ? Math.min(100, SESSIONS.length * 8) : 0}%"></div></div>
+        <small>共 ${SESSIONS.length} 个会话 · ${MODELS.length} 个可用模型</small>
+      </div>
+      <div class="specs">
+        <div><span>监听地址</span><b>${esc((CFG.host || '127.0.0.1') + ':' + (CFG.port || 8000))}</b></div>
+        <div><span>运行方式</span><b>设备端推理</b></div>
+        <div><span>知识库</span><b>${esc((KBSTAT.docs != null ? KBSTAT.docs : DOCS.length))} 份资料</b></div>
+      </div>
+    </section>
+    <section class="panel steps-panel"><h3>轻松开始一次本地对话</h3>
+      ${steps.map(s => '<div class="step"><span class="num">' + s[0] + '</span><div><b>' + s[1] + '</b><br>' + s[2] + '</div></div>').join('')}
+    </section>
+    <div class="privacy">${icon('shield')}<span>对话、资料与配置全部保存在本机 data/ 目录，端侧推理不会把内容上传到云端。</span></div>`;
+}
+function render() {
+  const views = { home, chat, tasks: tasksPage, knowledge, tools: toolsPage, storage, settings };
+  $('content').innerHTML = (views[PAGE] || home)();
+  $('crumb').textContent = '/ ' + ((NAVS.find(n => n[0] === PAGE) || [, , '偏好设置'])[2]);
+  $('nav').innerHTML = NAVS.map(n => '<button data-page="' + n[0] + '" class="' + (PAGE === n[0] ? 'active' : '') + '">' + icon(n[1]) + n[2] + (n[0] === 'tasks' ? '<span class="tag">Agent</span>' : '') + '</button>').join('');
+  renderHistory(); renderRight(); icons();
+  if ($('chatLog')) $('chatLog').scrollTop = $('chatLog').scrollHeight;
+  if ($('taskEvents')) renderTaskEvents();
+}
+function go(p) { if (GENERATING) stopGeneration(); PAGE = p; render(); $('sidebar').classList.remove('open'); $('backdrop').classList.remove('open'); }
+
+/* ---------- 页面 ---------- */
+function composer() {
+  return `<div class="composer">
+    <textarea id="prompt" aria-label="输入问题" placeholder="告诉我你想了解什么，或需要处理什么文字…"></textarea>
+    <div class="composer-bottom">
+      <div class="composer-left"><button class="icon-btn" id="attach" aria-label="导入资料">${icon('plus')}</button>
+        <span>Enter 发送 · Shift + Enter 换行 · <span id="composerModel">${esc(modelName(SELMODEL))}</span></span></div>
+      <div><button class="btn outline" id="stop" hidden>停止生成</button>
+        <button class="btn primary" id="send">${icon('arrow')}发送问题</button></div>
+    </div></div>`;
+}
+function home() {
+  return `<section class="hero"><div class="eyebrow">YOUR LOCAL AI WORKSPACE</div><h1>今天，让灵感<em>更进一步。</em></h1>
+      <p>从一个问题开始。模型在本机推理，会话与资料留在本地。</p></section>
+    ${composer()}
+    <div class="suggestions">${SUGGESTIONS.map(s => '<button data-suggest="' + esc(s) + '">' + esc(s) + '</button>').join('')}</div>
+    <div class="section-head"><h2>探索你的智能工作空间</h2><span>从想法到行动</span></div>
+    <div class="features">${FEATURES.map(x => `<button class="feature" data-page="${x[0]}"><span class="feature-icon">${icon(x[1])}</span><div><strong>${x[2]}</strong><p>${x[3]}</p></div><span class="arrow">›</span></button>`).join('')}</div>
+    <div class="section-head"><h2>最近会话</h2><span>保存在 data/chats</span></div>
+    <div class="recent">${SESSIONS.length ? SESSIONS.slice(0, 3).map(s => `<div class="recent-item"><div class="round">${icon('chat')}</div>
+      <div><strong>${esc(s.title || '新对话')}</strong><small>${fmt(s.updated_at || s.created_at)} · ${esc(s.message_count || 0)} 条消息</small></div>
+      <button data-session="${esc(s.id)}">继续对话 ↗</button></div>`).join('') : '<div class="empty-recent">还没有会话。在上方输入第一个问题，开始对话吧。</div>'}</div>`;
+}
+function chat() {
+  const s = SESSIONS.find(x => x.id === CURRENT);
+  return `<div class="section-head" style="margin-top:0"><div><div class="eyebrow">LOCAL CONVERSATION</div>
+      <h1 class="page-title">${esc(s ? (s.title || '新对话') : '开始一段新对话')}</h1></div>
+      <div class="row"><button class="btn outline" id="renameChat">重命名</button><button class="btn outline" id="newChat">${icon('plus')}新对话</button></div></div>
+    <div class="chat-log" id="chatLog">${CHAT.length ? CHAT.map(m => `<div class="message ${esc(m.role)}"><small>${m.role === 'user' ? '你' : 'Spark Chat'}</small>${esc(m.content || m.text || '')}</div>`).join('') : '<div class="info">消息由本地服务保存。选择右侧模型后即可开始对话；Enter 发送，Shift + Enter 换行。</div>'}</div>
+    ${composer()}`;
+}
+function tasksPage() {
+  return `<div class="eyebrow">SMART TASKS</div><h1 class="page-title">把目标拆成下一步</h1>
+    <p class="lead">描述目标，由端侧模型自动规划步骤、逐步执行并输出报告。</p>
+    <section class="panel"><label for="taskGoal">你想完成什么？</label>
+      <textarea class="search" id="taskGoal" rows="3" placeholder="例如：准备一节面向大三学生的机器学习课程"></textarea>
+      <div class="row"><button class="btn primary" id="runTask">${icon('task')}创建并运行任务</button>
+        <button class="btn outline" id="stopTask" hidden>停止</button>
+        <span class="small">任务会调用已启用的工具，进度实时推送</span></div>
+      <div id="taskEvents"></div></section>
+    <div class="section-head"><h2>任务记录</h2><span>${TASKS.length} 个任务</span></div>
+    <div class="panel">${TASKS.length ? TASKS.map(t => `<div class="file-row"><div><strong>${esc(t.title || '新任务')}</strong>
+      <small>${esc(t.status || 'draft')} · ${esc((t.progress && t.progress.done) || 0)}/${esc((t.progress && t.progress.total) || 0)} 步 · ${fmt(t.updated_at)}</small></div>
+      <button class="btn outline" data-task="${esc(t.id)}">查看</button></div>`).join('') : '<div class="info">还没有任务。输入一个目标试试。</div>'}</div>`;
+}
+function docRows() {
+  return DOCS.length ? DOCS.map(d => `<div class="file-row"><div><strong>${esc(d.name || d.id)}</strong>
+    <small>${esc(d.chunks != null ? d.chunks + ' 个分块 · ' : '')}${fmt(d.added_at)}</small></div>
+    <button class="btn outline" data-del-doc="${esc(d.id)}">删除</button></div>`).join('')
+    : '<div class="info">还没有资料。点击「导入资料」添加 PDF、Word、Excel 或文本文件。</div>';
+}
+function knowledge() {
+  return `<div class="eyebrow">PERSONAL KNOWLEDGE</div><h1 class="page-title">让资料，触手可及</h1>
+    <p class="lead">导入本地文件后自动切块；默认 BM25 关键词检索，配置 Embedding 后升级为语义混合检索。</p>
+    <div class="row"><button class="btn primary" id="import">${icon('upload')}导入资料</button>
+      <button class="btn outline" id="kbReindex">重建索引</button>
+      <span class="small">${esc(KBSTAT.mode === 'hybrid' ? '混合检索' : 'BM25 关键词检索')} · ${esc(KBSTAT.docs || DOCS.length)} 份资料 · ${esc(KBSTAT.chunks || 0)} 个分块</span></div>
+    <input class="search" id="fileSearch" aria-label="检索知识库" placeholder="输入关键词，检索本地资料…">
+    <div class="section-head"><h2>检索结果</h2><span>离线检索</span></div>
+    <div class="panel search-results" id="searchResults"><div class="info">输入关键词开始检索。</div></div>
+    <div class="section-head"><h2>已入库资料</h2><span>保存在 data/kb</span></div>
+    <div class="panel" id="filesList">${docRows()}</div>`;
+}
+function toolsPage() {
+  return `<div class="eyebrow">EVERYDAY TOOLS</div><h1 class="page-title">让日常工作更顺手</h1>
+    <p class="lead">开关智能体可调用的能力，或使用内置模板与本地文本统计。</p>
+    <div class="section-head" style="margin-top:0"><h2>能力开关</h2><span>即时生效</span></div>
+    <div class="panel">${TOOLS.length ? TOOLS.map(t => `<div class="form-row"><div>${esc(t.name || t.id)}
+      <small>${esc(t.desc || t.description || (t.id === 'code' ? '实验性 Python 执行，默认关闭' : ''))}${t.experimental ? ' · 实验性' : ''}</small></div>
+      <input type="checkbox" data-tool="${esc(t.id)}" ${t.enabled ? 'checked' : ''} aria-label="${esc(t.name || t.id)}"></div>`).join('') : '<div class="info">工具列表加载中…</div>'}</div>
+    <div class="section-head"><h2>常用模板</h2><span>一键带入对话</span></div>
+    <div class="features">${TEMPLATES.map(x => `<button class="feature" data-template="${esc(x[1])}"><span class="feature-icon">${icon('spark')}</span><div><strong>${x[0]}</strong><p>将模板带入对话，补充你的内容</p></div></button>`).join('')}</div>
+    <section class="panel" style="margin-top:20px"><h3>文本统计 · 浏览器本地计算</h3>
+      <textarea class="search" id="countText" rows="4" placeholder="粘贴文本，即时查看统计"></textarea>
+      <div id="countResult" style="color:var(--purple)">0 字符 · 0 个非空白字符 · 0 段</div></section>`;
+}
+function storage() {
+  const cats = SPACE && typeof SPACE === 'object' ? SPACE : {};
+  const bytes = n => ((n || 0) / 1024 / 1024).toFixed(2) + ' MB';
+  return `<div class="eyebrow">LOCAL DATA</div><h1 class="page-title">你的数据，由你管理</h1>
+    <p class="lead">配置、会话、任务、知识库与备份都保存在 U 盘的 data/ 目录。</p>
+    <div class="stat"><div>占用空间<strong>${bytes(cats.total)}</strong></div>
+      <div>会话<strong>${SESSIONS.length}</strong></div><div>资料<strong>${DOCS.length}</strong></div>
+      <div>备份<strong>${BACKUPS.length}</strong></div></div>
+    <section class="panel"><h3>备份与恢复</h3>
+      <div class="row"><button class="btn primary" id="createBackup">${icon('plus')}创建备份</button>
+        <button class="btn outline" id="exportCfg">导出配置</button>
+        <button class="btn outline" id="importCfg">导入配置</button></div>
+      <div class="divider"></div>
+      ${BACKUPS.length ? BACKUPS.map(b => `<div class="file-row"><div><strong>${esc(b.id)}</strong>
+        <small>${fmt(b.timestamp)} · ${bytes(b.size)} · ${esc(b.chats || 0)} 个会话</small></div>
+        <div class="row"><button class="btn outline" data-restore="${esc(b.id)}">恢复</button>
+        <button class="btn outline" data-del-backup="${esc(b.id)}">删除</button></div></div>`).join('') : '<div class="info">还没有备份。</div>'}</section>
+    <section class="panel" style="margin-top:20px"><h3>空间清理</h3>
+      <div class="form-row"><div>缓存与临时文件<small>清理 data/cache、data/temp 与轮转日志</small></div>
+        <button class="btn outline" id="doCleanup">立即清理</button></div>
+      <div class="form-row"><div>运行日志<small>查看服务日志，可按级别筛选</small></div>
+        <div class="row"><input class="search" style="width:150px;margin:0" id="logSearch" placeholder="搜索日志…">
+        <button class="btn outline" id="loadLogs">查看</button><button class="btn outline" id="exportLogs">导出</button></div></div>
+      <div class="logbox" id="logBox">${LOGS.length ? LOGS.map(l => '<div>' + esc((l.time || '') + ' [' + (l.level || '') + '] ' + (l.message || '')) + '</div>').join('') : '点击「查看」加载日志。'}</div></section>`;
+}
+const CFG_FIELDS = [
+  ['model', '默认模型', '对话与任务默认使用的模型', 'select-model'],
+  ['spark_base_url', '端侧推理端点', 'Ollama / vLLM / LM Studio 的 OpenAI 兼容地址', 'text'],
+  ['host', '监听地址', '改为 0.0.0.0 可供局域网访问，重启生效', 'text'],
+  ['port', '服务端口', '重启生效', 'number'],
+  ['max_tokens', '最大生成长度', '单次回复的 token 上限', 'number'],
+  ['timeout', '请求超时（秒）', '模型响应超时时间', 'number'],
+  ['custom_base_url', '自定义端点 URL', '留空则不启用', 'text'],
+  ['custom_model_id', '自定义模型 ID', '与 URL 同时填写才生效', 'text'],
+  ['embedding_base_url', 'Embedding 端点', '配置后知识库升级为语义混合检索', 'text'],
+  ['embedding_model', 'Embedding 模型', '留空则使用 BM25', 'text'],
+  ['theme', '界面主题', 'light / dark', 'text'],
+  ['language', '语言', 'zh-CN / en-US', 'text'],
+  ['backup_interval', '自动备份间隔（秒）', '0 表示关闭', 'number'],
+  ['backup_keep', '保留备份数', '超出后自动清理旧备份', 'number']
+];
+function settings() {
+  const rows = CFG_FIELDS.map(([key, label, hint, type]) => {
+    const val = CFG[key] == null ? '' : CFG[key];
+    let field;
+    if (type === 'select-model') field = `<select id="cfg_${key}">${MODELS.map(m => '<option value="' + esc(m.id) + '"' + (m.id === (val || SELMODEL) ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('')}</select>`;
+    else field = `<input id="cfg_${key}" type="${type === 'number' ? 'number' : 'text'}" value="${esc(val)}">`;
+    return `<div class="form-row"><div>${label}<small>${hint}</small></div>${field}</div>`;
+  }).join('');
+  return `<div class="eyebrow">PREFERENCES</div><h1 class="page-title">打造你的使用习惯</h1>
+    <p class="lead">让界面适应你，也让端侧推理与资源使用清晰可控。</p>
+    <section class="panel"><h3>连接与模型</h3><div class="setting-grid">${rows}</div>
+      <div class="form-row"><div>自动备份<small>按设定周期自动备份配置</small></div>
+        <input type="checkbox" id="cfg_auto_backup" ${CFG.auto_backup ? 'checked' : ''} aria-label="自动备份"></div>
+      <div class="form-row"><div>访问令牌<small>局域网模式必填；仅保存在本浏览器，随请求发送</small></div>
+        <input type="password" id="cfg_token" value="${esc(TOKEN)}" placeholder="启动日志中的令牌"></div>
+      <div class="row" style="margin-top:18px"><button class="btn primary" id="saveCfg">保存设置</button>
+        <button class="btn outline" id="themeSettings">切换深浅主题</button></div>
+      <div class="info" style="margin-top:16px">修改监听地址或端口后需重启 Spark Chat 才会生效；端侧模型本身无需任何 API Key。</div></section>
+    <section class="panel" style="margin-top:20px"><h3>已装载插件</h3>
+      ${Array.isArray(PLUGINS) && PLUGINS.length ? PLUGINS.map(p => `<div class="form-row"><div>${esc(p.name)} <span class="badge">${esc(p.version || 'v')}</span><small>${esc(p.description || '')}</small></div>
+        <span class="badge">${esc(p.status || (p.loaded ? '已装载' : '未装载'))}${p.error ? ' · ' + esc(p.error) : ''}</span></div>`).join('') : '<div class="info">暂无插件信息。把 *.py 放到 exe 同级 plugins/ 目录后重启即可装载。</div>'}</section>
+    <section class="panel" style="margin-top:20px"><h3>内置人格</h3>
+      ${AGENTS.length ? AGENTS.map(a => `<div class="form-row"><div>${esc(a.emoji || '')} ${esc(a.name)}<small>${esc(a.desc || '')}</small></div><span class="badge">${esc(a.id)}</span></div>`).join('') : '<div class="info">人格列表加载中…</div>'}</section>`;
+}
+
+/* ---------- 对话 ---------- */
+function appendMsg(role, text) {
+  const log = $('chatLog'); if (!log) return null;
+  const empty = log.querySelector('.info'); if (empty) empty.remove();
+  const d = document.createElement('div'); d.className = 'message ' + role;
+  d.innerHTML = '<small>' + (role === 'user' ? '你' : 'Spark Chat') + '</small>';
+  const span = document.createElement('span'); span.textContent = text; d.appendChild(span);
+  log.appendChild(d); log.scrollTop = log.scrollHeight;
+  return span;
+}
+function setGeneratingUI(on) {
+  const send = $('send'), stop = $('stop'), ta = $('prompt');
+  if (send) send.disabled = on;
+  if (stop) stop.hidden = !on;
+  if (ta) ta.placeholder = on ? '正在生成，可点击「停止生成」…' : '告诉我你想了解什么，或需要处理什么文字…';
+}
+async function openSession(id) {
+  CURRENT = id; CHAT = [];
+  try { const c = await api('/api/conversations/' + encodeURIComponent(id)); CHAT = (c && c.messages) || []; if (c && c.model) SELMODEL = c.model; }
+  catch (e) { toast(e.message); }
+  PAGE = 'chat'; render();
+}
+function newChat() { CURRENT = null; CHAT = []; PAGE = 'chat'; render(); const p = $('prompt'); if (p) p.focus(); }
+function setPrompt(v) { if (PAGE !== 'chat') { PAGE = 'chat'; CHAT = []; render(); } const p = $('prompt'); if (p) { p.value = v; p.focus(); } }
+function stopGeneration() { if (CTRL) { try { CTRL.abort(); } catch (e) { /* noop */ } } GENERATING = false; setGeneratingUI(false); }
+async function send() {
+  if (GENERATING) return;
+  const ta = $('prompt'); const text = ta ? ta.value.trim() : '';
+  if (!text) return toast('先写下你的问题吧。');
+  if (PAGE !== 'chat') { PAGE = 'chat'; CHAT = []; render(); }
+  const uSpan = appendMsg('user', text); if (!uSpan) return;
+  const aSpan = appendMsg('assistant', '');
+  ta.value = '';
+  GENERATING = true; setGeneratingUI(true);
+  CTRL = new AbortController();
+  const payload = { message: text, model: SELMODEL || undefined };
+  if (CURRENT) payload.conversation_id = CURRENT;
+  let full = '', streamErr = '';
+  try {
+    await sse('/api/chat/stream', payload, ev => {
+      if (ev.type === 'meta') { CURRENT = ev.conversation_id || CURRENT; }
+      else if (ev.type === 'delta') { full += ev.delta || ev.text || ''; if (aSpan) aSpan.textContent = full; if ($('chatLog')) $('chatLog').scrollTop = $('chatLog').scrollHeight; }
+      else if (ev.type === 'done') { CURRENT = ev.conversation_id || CURRENT; }
+      else if (ev.type === 'error') { streamErr = ev.message || ev.code || '生成失败'; }
+      else if (ev.type === 'text' || ev.type === 'activity') { full += ev.text || ''; if (aSpan) aSpan.textContent = full; }
+    }, CTRL.signal);
+    if (streamErr) throw new Error(streamErr);
+    await refreshSessions();
+    if (CURRENT) await openSession(CURRENT);
+  } catch (e) {
+    if (e.name !== 'AbortError') { toast(e.message); if (!full && aSpan) aSpan.textContent = '（生成失败：' + e.message + '）'; }
+  } finally { GENERATING = false; CTRL = null; setGeneratingUI(false); }
+}
+
+/* ---------- 智能任务 ---------- */
+function renderTaskEvents() {
+  const box = $('taskEvents'); if (!box) return;
+  box.innerHTML = TASK_EVENTS.slice(-80).map(e => {
+    if (e.type === 'status') return '<div class="event"><b>状态</b> ' + esc(e.status || '') + (e.model ? ' · ' + esc(e.model) : '') + '</div>';
+    if (e.type === 'plan') return '<div class="event ok"><b>计划已生成</b> ' + esc((e.plan || []).map(p => p.name).join(' → ')) + '</div>';
+    if (e.type === 'step') return '<div class="event"><b>步骤 ' + esc((e.index != null ? e.index + 1 : '?')) + '</b> ' + esc(e.name || '') + ' · ' + esc(e.status || '') + '</div>';
+    if (e.type === 'text' || e.type === 'activity') return '<div class="event"><pre>' + esc(e.text || '') + '</pre></div>';
+    if (e.type === 'report' || e.type === 'done') return '<div class="event ok"><b>任务报告</b><pre>' + esc(e.text || e.report || e.output || '') + '</pre></div>';
+    if (e.type === 'error') return '<div class="event err"><b>错误</b> ' + esc(e.message || e.code || '') + '</div>';
+    return '<div class="event small"><pre>' + esc(JSON.stringify(e)) + '</pre></div>';
+  }).join('');
+  box.scrollTop = box.scrollHeight;
+}
+async function runTask() {
+  if (TASKCTRL) return;
+  const goal = $('taskGoal') ? $('taskGoal').value.trim() : '';
+  if (!goal) return toast('请先描述任务目标。');
+  TASK_EVENTS = []; renderTaskEvents();
+  const btn = $('runTask'); if (btn) btn.disabled = true;
+  const stop = $('stopTask'); if (stop) stop.hidden = false;
+  TASKCTRL = new AbortController();
+  try {
+    const fd = new FormData();
+    fd.append('title', goal.slice(0, 24)); fd.append('goal', goal);
+    fd.append('agent', 'general'); fd.append('model', SELMODEL || 'auto');
+    const t = await api('/api/tasks', { method: 'POST', body: fd });
+    const id = t && (t.id || t.task_id);
+    if (!id) throw new Error('任务创建失败');
+    await sse('/api/tasks/' + encodeURIComponent(id) + '/run/stream', {}, ev => { TASK_EVENTS.push(ev); renderTaskEvents(); }, TASKCTRL.signal);
+    await refreshTasks();
+    toast('任务执行结束');
+  } catch (e) {
+    if (e.name !== 'AbortError') { TASK_EVENTS.push({ type: 'error', message: e.message }); renderTaskEvents(); toast(e.message); }
+  } finally {
+    TASKCTRL = null; if (btn) btn.disabled = false; if (stop) stop.hidden = true;
+  }
+}
+
+/* ---------- 知识库 / 工具 / 数据维护 ---------- */
+async function uploadFiles(files) {
+  if (!files || !files.length) return;
+  const fd = new FormData(); [...files].forEach(f => fd.append('files', f));
+  try {
+    const r = await api('/api/kb/upload', { method: 'POST', body: fd });
+    const n = r && (r.added != null ? r.added : (Array.isArray(r) ? r.length : files.length));
+    toast('已导入 ' + n + ' 份资料');
+    await refreshKB(); PAGE = 'knowledge'; render();
+  } catch (e) { toast(e.message); }
+}
+async function kbSearch(q) {
+  const box = $('searchResults'); if (!box) return;
+  if (!q.trim()) { box.innerHTML = '<div class="info">输入关键词开始检索。</div>'; return; }
+  box.innerHTML = '<div class="small">检索中…</div>';
+  try {
+    const r = await api('/api/kb/search?q=' + encodeURIComponent(q) + '&top=8&mode=auto');
+    const hits = Array.isArray(r) ? r : (r && (r.hits || r.results)) || [];
+    box.innerHTML = hits.length ? hits.map(h => `<div class="file-row"><div><strong>${esc(h.name || h.doc_id)} <span class="badge">${esc((h.score || 0).toFixed ? h.score.toFixed(2) : h.score)}</span></strong>
+      <small>第 ${esc((h.chunk_index != null ? h.chunk_index + 1 : 1))} 块 · ${esc(h.doc_id || '')}</small>
+      <div class="small" style="margin-top:6px">${esc(h.snippet || (h.text || '').slice(0, 160))}</div></div></div>`).join('')
+      : '<div class="info">没有找到匹配内容。</div>';
+  } catch (e) { box.innerHTML = '<div class="info">' + esc(e.message) + '</div>'; }
+}
+async function saveSettings() {
+  const patch = {};
+  CFG_FIELDS.forEach(([key, , , type]) => {
+    const el = $('cfg_' + key); if (!el) return;
+    patch[key] = type === 'number' ? Number(el.value) : el.value;
+  });
+  patch.auto_backup = !!($('cfg_auto_backup') && $('cfg_auto_backup').checked);
+  try {
+    await api('/api/config', { method: 'POST', json: patch });
+    const tk = $('cfg_token'); TOKEN = tk ? tk.value.trim() : TOKEN;
+    try { localStorage.setItem('spark-access-token', TOKEN); } catch (e) { /* noop */ }
+    toast('设置已保存'); await refreshCore(); render();
+  } catch (e) { toast(e.message); }
+}
+async function download(path, name, method) {
+  const h = TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {};
+  const r = await fetch(path, { method: method || 'POST', headers: h });
+  if (!r.ok) throw new Error('导出失败 (' + r.status + ')');
+  const b = await r.blob(), u = URL.createObjectURL(b), a = document.createElement('a');
+  a.href = u; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+}
+function confirmBox(title, text) {
+  return new Promise(resolve => {
+    $('confirmTitle').textContent = title; $('confirmText').textContent = text;
+    const d = $('confirmDialog'), ok = $('confirmOk'), cancel = $('confirmCancel');
+    const done = v => { d.close(); ok.removeEventListener('click', yes); cancel.removeEventListener('click', no); resolve(v); };
+    const yes = () => done(true), no = () => done(false);
+    ok.addEventListener('click', yes); cancel.addEventListener('click', no);
+    d.showModal();
+  });
+}
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark');
+  try { localStorage.setItem('spark-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); } catch (e) { /* noop */ }
+}
+
+/* ---------- 事件 ---------- */
+document.addEventListener('click', async e => {
+  const n = e.target.closest('[data-page],[data-suggest],[data-session],[data-template],[data-del-doc],[data-task],[data-restore],[data-del-backup]');
+  if (n) {
+    if (n.dataset.page) return go(n.dataset.page);
+    if (n.dataset.suggest || n.dataset.template) return setPrompt(n.dataset.suggest || n.dataset.template);
+    if (n.dataset.session) return openSession(n.dataset.session);
+    if (n.dataset.task) {
+      try { const t = await api('/api/tasks/' + encodeURIComponent(n.dataset.task)); toast((t && (t.title || '任务')) + ' · ' + (t && t.status || '')); }
+      catch (err) { toast(err.message); }
+      return;
+    }
+    if (n.dataset.delDoc) {
+      if (!await confirmBox('删除资料', '确定从知识库删除这份资料？此操作不可撤销。')) return;
+      try { await api('/api/kb/' + encodeURIComponent(n.dataset.delDoc), { method: 'DELETE' }); toast('资料已删除'); await refreshKB(); render(); } catch (err) { toast(err.message); }
+      return;
+    }
+    if (n.dataset.restore) {
+      if (!await confirmBox('恢复备份', '将用该备份覆盖当前配置与会话，确定继续？')) return;
+      try { await api('/api/backup/restore', { method: 'POST', json: { backup_id: n.dataset.restore } }); toast('备份已恢复'); await refreshCore(); render(); } catch (err) { toast(err.message); }
+      return;
+    }
+    if (n.dataset.delBackup) {
+      if (!await confirmBox('删除备份', '确定删除这个备份文件？')) return;
+      try { await api('/api/backup/' + encodeURIComponent(n.dataset.delBackup), { method: 'DELETE' }); toast('备份已删除'); await refreshBackups(); render(); } catch (err) { toast(err.message); }
+      return;
+    }
+  }
+  const id = e.target.closest('button') ? e.target.closest('button').id : '';
+  switch (id) {
+    case 'send': send(); break;
+    case 'stop': stopGeneration(); toast('已停止生成'); break;
+    case 'newChat': newChat(); break;
+    case 'renameChat': {
+      if (!CURRENT) return toast('请先开始一段对话');
+      const s = SESSIONS.find(x => x.id === CURRENT);
+      const t = prompt('重命名会话', s ? s.title : '');
+      if (t && t.trim()) { try { await api('/api/conversations/' + encodeURIComponent(CURRENT), { method: 'PATCH', json: { title: t.trim() } }); await refreshSessions(); render(); } catch (err) { toast(err.message); } }
+      break;
+    }
+    case 'attach': toast('选择文件后将导入本地知识库'); $('fileInput').click(); break;
+    case 'import': $('fileInput').click(); break;
+    case 'kbReindex': try { const r = await api('/api/kb/reindex', { method: 'POST', json: {} }); toast(r && r.ok === false ? '索引重建失败' : '索引已重建'); await refreshKB(); render(); } catch (err) { toast(err.message); } break;
+    case 'runTask': runTask(); break;
+    case 'stopTask': if (TASKCTRL) { try { TASKCTRL.abort(); } catch (err) { /* noop */ } } break;
+    case 'testConn': {
+      toast('正在测试连接…');
+      try { const r = await api('/api/config/test', { method: 'POST', json: { model: SELMODEL } }); toast((r && r.ok ? '连接正常：' : '连接失败：') + (r && r.message || '')); }
+      catch (err) { toast(err.message); }
+      break;
+    }
+    case 'refreshAll': await refreshCore(); await Promise.allSettled([refreshKB(), refreshTools(), refreshTasks(), refreshAgents(), refreshPlugins(), refreshBackups(), refreshSpace()]); render(); toast('状态已刷新'); break;
+    case 'createBackup': try { const r = await api('/api/backup', { method: 'POST', json: { include_chats: true } }); toast('备份已创建：' + ((r && r.backup_id) || '')); await refreshBackups(); render(); } catch (err) { toast(err.message); } break;
+    case 'exportCfg': try { await download('/api/config/export', 'spark-chat-config.json'); toast('配置已导出'); } catch (err) { toast(err.message); } break;
+    case 'exportLogs': try { await download('/api/logs/export', 'spark-chat-logs.txt', 'GET'); toast('日志已导出'); } catch (err) { toast(err.message); } break;
+    case 'importCfg': {
+      const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json';
+      inp.onchange = async () => {
+        if (!inp.files || !inp.files[0]) return;
+        const fd = new FormData(); fd.append('file', inp.files[0]);
+        try { await api('/api/config/import', { method: 'POST', body: fd }); toast('配置已导入'); await refreshCore(); render(); } catch (err) { toast(err.message); }
+      };
+      inp.click(); break;
+    }
+    case 'doCleanup': {
+      if (!await confirmBox('清理空间', '将清理缓存、临时文件与日志，确定继续？')) return;
+      try { await api('/api/cleanup', { method: 'POST', json: { cache: true, temp: true, logs: true, chat_days: 0 } }); toast('清理完成'); await refreshSpace(); render(); } catch (err) { toast(err.message); }
+      break;
+    }
+    case 'loadLogs': await refreshLogs($('logSearch') ? $('logSearch').value : ''); render(); break;
+    case 'saveCfg': saveSettings(); break;
+    case 'theme': case 'themeSettings': toggleTheme(); break;
+    case 'menu': $('sidebar').classList.toggle('open'); $('backdrop').classList.toggle('open'); break;
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.target.id === 'prompt' && e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'fileSearch') {
+    clearTimeout(window.__kbTimer);
+    window.__kbTimer = setTimeout(() => kbSearch(e.target.value), 350);
+  }
+  if (e.target.id === 'countText') {
+    const t = e.target.value;
+    $('countResult').textContent = t.length + ' 字符 · ' + t.replace(/\s/g, '').length + ' 个非空白字符 · ' + t.split(/\n+/).filter(x => x.trim()).length + ' 段';
+  }
+});
+document.addEventListener('change', async e => {
+  if (e.target.id === 'modelSel') { SELMODEL = e.target.value; renderRight(); const c = $('composerModel'); if (c) c.textContent = modelName(SELMODEL); }
+  if (e.target.dataset && e.target.dataset.tool) {
+    try { await api('/api/tools', { method: 'POST', json: { id: e.target.dataset.tool, enabled: e.target.checked } }); toast('工具状态已更新'); }
+    catch (err) { e.target.checked = !e.target.checked; toast(err.message); }
+  }
+});
+$('fileInput').onchange = e => { uploadFiles(e.target.files); e.target.value = ''; };
+$('backdrop').onclick = () => { $('sidebar').classList.remove('open'); $('backdrop').classList.remove('open'); };
+
+(async function boot() {
+  try { if (localStorage.getItem('spark-theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) { /* noop */ }
+  render();
+  await refreshCore();
+  render();
+  await Promise.allSettled([refreshKB(), refreshTools(), refreshTasks(), refreshAgents(), refreshPlugins(), refreshBackups(), refreshSpace()]);
+  render();
+})();
+</script>
+</body>
+</html>
