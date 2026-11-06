@@ -43,7 +43,13 @@ const mock = {
   '/api/backup': { success: true, data: [{ id: 'backup_1', timestamp: now, version: '3.1.0', chats: 1, size: 2048 }] },
   '/api/cleanup': { success: true, data: { space: { total: 1048576, chats: 2048 }, disk_free_ratio: 0.7 } },
   '/api/logs': { success: true, data: { logs: [{ time: now, name: 'sparkchat', level: 'INFO', message: '启动成功' }], total: 1, page: 1, page_size: 60 } },
-  '/api/config/test': { success: true, data: { ok: true, message: '端点可达' } }
+  '/api/config/test': { success: true, data: { ok: true, message: '端点可达' } },
+  '/runtime-status.json': {
+    backend: 'cuda13', backendLabel: 'CUDA 13.4', engine: 'llama.cpp b12128',
+    model: 'Spark-X2.6-4B-Q4_K_M.gguf', displayName: 'Spark-X2.6-4B',
+    modelId: 'spark-x2.5-4b', baseUrl: 'http://127.0.0.1:11435/v1',
+    ready: true, profile: 'fast'
+  }
 };
 
 function sseResponse(events) {
@@ -94,6 +100,8 @@ const probe = `
   }
   const right=document.getElementById('right').innerHTML;
   report.push('right:'+right.length+(right.includes('undefined')?' ERROR[undefined]':' ok'));
+  const runtimeUI = right.includes('Spark-X2.6-4B') && right.includes('CUDA 13.4') && right.includes('内置引擎已就绪');
+  report.push('runtime-ui:'+(runtimeUI?'ok':'ERROR[内置模型状态未渲染]'));
   let sseText='';
   await sse('/api/chat/stream',{message:'x'},ev=>{if(ev.type==='delta')sseText+=ev.delta;},null);
   report.push('sse-delta:'+(sseText==='你好，这是流式回复'?'ok':'ERROR['+sseText+']'));

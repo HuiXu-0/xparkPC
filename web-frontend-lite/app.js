@@ -50,7 +50,7 @@ const SUGGESTIONS = ['用通俗的语言解释机器学习', '帮我润色一段
 
 let PAGE = 'home', CURRENT = null, CHAT = [], SELMODEL = '', GENERATING = false, CTRL = null, TASKCTRL = null;
 let TOKEN = (() => { try { return localStorage.getItem('spark-access-token') || ''; } catch { return ''; } })();
-let CFG = {}, MODELS = [], SESSIONS = [], AGENTS = [], TOOLS = [], DEPS = {}, DOCS = [], KBSTAT = {}, TASKS = [], BACKUPS = [], SPACE = {}, PLUGINS = [], LOGS = [], HEALTH = null, ONLINE = false, TASK_EVENTS = [];
+let CFG = {}, MODELS = [], SESSIONS = [], AGENTS = [], TOOLS = [], DEPS = {}, DOCS = [], KBSTAT = {}, TASKS = [], BACKUPS = [], SPACE = {}, PLUGINS = [], LOGS = [], HEALTH = null, RUNTIME = null, ONLINE = false, TASK_EVENTS = [];
 
 /* ---------- 后端通信 ---------- */
 function errOf(j, status) {
@@ -114,14 +114,19 @@ function normalizeModels(v) {
     : { id: x.id || x.model_id || x.name, name: x.name || x.id, provider: x.provider || '', capability: x.capability || '' });
 }
 async function refreshCore() {
-  const [h, c, m, s] = await Promise.allSettled([api('/health'), api('/api/config'), api('/api/models'), api('/api/conversations')]);
+  const [h, c, m, s, rs] = await Promise.allSettled([
+    api('/health'), api('/api/config'), api('/api/models'), api('/api/conversations'), api('/runtime-status.json')
+  ]);
   if (h.status === 'fulfilled') { HEALTH = h.value; ONLINE = true; } else ONLINE = false;
   if (c.status === 'fulfilled') CFG = c.value || {};
   if (m.status === 'fulfilled') MODELS = normalizeModels(m.value);
   if (s.status === 'fulfilled') SESSIONS = Array.isArray(s.value) ? s.value : [];
+  // 启动器生成的状态文件；不存在时后端会回退 index.html，api() 会得到 {}，这里安全忽略
+  if (rs.status === 'fulfilled' && rs.value && rs.value.displayName) RUNTIME = rs.value;
   if (!SELMODEL) SELMODEL = CFG.model || 'spark-x2.5-4b';
   updateTop();
-  if (!ONLINE) notice('本地服务未连接。请双击「启动 Spark Chat.bat」后刷新本页。');
+  if (!ONLINE) notice('本地服务未连接。请双击「启动 Spark Chat（内置模型版）.bat」后刷新本页。');
+  else if (RUNTIME && !RUNTIME.ready) notice('内置推理引擎尚未就绪，首次加载 3.3 GB 模型约需 1–2 分钟。');
   else if (CFG.access_token_required && !TOKEN) notice('服务已开启访问令牌保护。如请求失败，请在「偏好设置」中填写令牌。');
   else notice('');
 }
@@ -136,10 +141,15 @@ const refreshSpace = async () => { try { const r = await api('/api/cleanup'); SP
 const refreshLogs = async (q) => { try { const r = await api('/api/logs?page=1&page_size=60&level=all&search=' + encodeURIComponent(q || '')); LOGS = (r && r.logs) || []; } catch (e) { /* noop */ } };
 
 /* ---------- 通用渲染 ---------- */
-function modelName(id) { const m = MODELS.find(x => x.id === id); return m ? m.name : (id || 'Spark-X2.5-4B'); }
+function modelName(id) {
+  if (RUNTIME && RUNTIME.displayName) return RUNTIME.displayName;
+  const m = MODELS.find(x => x.id === id); return m ? m.name : (id || 'Spark-X2.6-4B');
+}
 function updateTop() {
   const el = $('topState'); if (!el) return;
-  el.innerHTML = '<span class="dot ' + (ONLINE ? 'green' : '') + '"></span>' + (ONLINE ? '服务在线 · ' + MODELS.length + ' 个模型' : '服务未连接');
+  const label = (RUNTIME && RUNTIME.ready) ? '内置引擎 · ' + (RUNTIME.backendLabel || '本地')
+    : (ONLINE ? '服务在线' : '服务未连接');
+  el.innerHTML = '<span class="dot ' + (ONLINE ? 'green' : '') + '"></span>' + label;
 }
 function renderHistory() {
   const list = SESSIONS.slice(0, 6);
@@ -150,17 +160,22 @@ function renderHistory() {
 function renderRight() {
   const m = MODELS.find(x => x.id === SELMODEL) || MODELS[0] || {};
   const cur = SESSIONS.find(x => x.id === CURRENT);
-  const steps = [['1', '确认推理端点', '设置中核对端侧服务地址'], ['2', '描述你的问题', '流式输出，可随时停止'], ['3', '继续或新建', '会话自动保存在本地']];
+  const ready = RUNTIME ? RUNTIME.ready : ONLINE;
+  const steps = [
+    ['1', '启动内置引擎', '随包 llama.cpp 自动加载 GGUF 权重'],
+    ['2', '描述你的问题', 'GPU 加速流式输出，可随时停止'],
+    ['3', '用后直接关闭', '会话与资料留在项目 data/ 目录']
+  ];
   $('right').innerHTML = `
     <section class="panel">
-      <div class="model-head"><h2>端侧模型</h2><span class="chip" style="padding:2px 8px;font-size:9px">SPARK-X2.5</span></div>
+      <div class="model-head"><h2>内置模型</h2><span class="chip" style="padding:2px 8px;font-size:9px">SPARK-X2.6</span></div>
       <div class="model-symbol" data-icon="cpu"></div>
-      <div class="model-name">${esc(m.name || 'Spark-X2.5-4B')}</div>
-      <div class="model-version">本机 OpenAI 兼容服务 · 免 API Key</div>
-      <div class="model-status"><span class="dot ${ONLINE ? 'green' : ''}" id="stateDot"></span><b id="stateText">${ONLINE ? '服务已连接' : '服务未连接'}</b></div>
-      <p class="model-description" id="stateDesc">推理端点 ${esc(CFG.spark_base_url || 'http://127.0.0.1:11434/v1')}</p>
+      <div class="model-name">${esc(RUNTIME ? RUNTIME.displayName : (m.name || 'Spark-X2.6-4B'))}</div>
+      <div class="model-version">${RUNTIME ? '内置 ' + esc(RUNTIME.engine) + ' · ' + esc(RUNTIME.backendLabel) : '本机 OpenAI 兼容服务 · 免 API Key'}</div>
+      <div class="model-status"><span class="dot ${ready ? 'green' : ''}" id="stateDot"></span><b id="stateText">${(RUNTIME && RUNTIME.ready) ? '内置引擎已就绪' : (ONLINE ? '引擎加载中' : '服务未连接')}</b></div>
+      <p class="model-description" id="stateDesc">${RUNTIME ? '内置端点 ' + esc(RUNTIME.baseUrl) + ' · 权重随包内置，无需联网' : '推理端点 ' + esc(CFG.spark_base_url || 'http://127.0.0.1:11434/v1')}</p>
       <select class="search" id="modelSel" aria-label="选择模型">
-        ${MODELS.length ? MODELS.map(x => '<option value="' + esc(x.id) + '"' + (x.id === SELMODEL ? ' selected' : '') + '>' + esc(x.name) + '</option>').join('') : '<option value="">加载中…</option>'}
+        ${MODELS.length ? MODELS.map(x => '<option value="' + esc(x.id) + '"' + (x.id === SELMODEL ? ' selected' : '') + '>' + esc(RUNTIME && RUNTIME.displayName ? RUNTIME.displayName : x.name) + '</option>').join('') : '<option value="">加载中…</option>'}
       </select>
       <button class="btn primary full" id="testConn">${icon('power')}测试连接</button>
       <button class="btn outline full release" id="refreshAll">${icon('refresh')}刷新状态</button>
@@ -172,14 +187,14 @@ function renderRight() {
       </div>
       <div class="specs">
         <div><span>监听地址</span><b>${esc((CFG.host || '127.0.0.1') + ':' + (CFG.port || 8000))}</b></div>
-        <div><span>运行方式</span><b>设备端推理</b></div>
+        <div><span>推理后端</span><b>${esc(RUNTIME ? RUNTIME.backendLabel + ' · ' + RUNTIME.profile : '外部服务')}</b></div>
         <div><span>知识库</span><b>${esc((KBSTAT.docs != null ? KBSTAT.docs : DOCS.length))} 份资料</b></div>
       </div>
     </section>
     <section class="panel steps-panel"><h3>轻松开始一次本地对话</h3>
       ${steps.map(s => '<div class="step"><span class="num">' + s[0] + '</span><div><b>' + s[1] + '</b><br>' + s[2] + '</div></div>').join('')}
     </section>
-    <div class="privacy">${icon('shield')}<span>对话、资料与配置全部保存在本机 data/ 目录，端侧推理不会把内容上传到云端。</span></div>`;
+    <div class="privacy">${icon('shield')}<span>模型与推理引擎已内置，不依赖本机 Ollama；对话、资料与配置全部保存在项目 data/ 目录，不会上传到云端。</span></div>`;
 }
 function render() {
   const views = { home, chat, tasks: tasksPage, knowledge, tools: toolsPage, storage, settings };

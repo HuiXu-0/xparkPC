@@ -19,3 +19,12 @@ Thumbs.db
 __pycache__/
 *.pyc
 node_modules/
+
+# 内置推理引擎与模型：随包分发，绝不入库（单文件上限 100 MB）
+runtime/
+mood/
+models/
+*.gguf
+*.dll
+*.zip
+frontend/runtime-status.json
