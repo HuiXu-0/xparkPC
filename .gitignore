@@ -27,4 +27,4 @@ models/
 *.gguf
 *.dll
 *.zip
-frontend/runtime-status.json
+**/frontend/runtime-status.json
