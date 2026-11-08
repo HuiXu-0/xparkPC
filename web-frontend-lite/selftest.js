@@ -100,8 +100,9 @@ const probe = `
   }
   const right=document.getElementById('right').innerHTML;
   report.push('right:'+right.length+(right.includes('undefined')?' ERROR[undefined]':' ok'));
-  const runtimeUI = right.includes('Spark-X2.6-4B') && right.includes('CUDA 13.4') && right.includes('内置引擎已就绪');
+  const runtimeUI = right.includes('Spark-X2.6-4B') && right.includes('CUDA 13.4') && right.includes('引擎就绪，可以对话');
   report.push('runtime-ui:'+(runtimeUI?'ok':'ERROR[内置模型状态未渲染]'));
+  report.push('unix-time:'+(fmt(1793936907.93).includes('2026')?'ok':'ERROR['+fmt(1793936907.93)+']'));
   let sseText='';
   await sse('/api/chat/stream',{message:'x'},ev=>{if(ev.type==='delta')sseText+=ev.delta;},null);
   report.push('sse-delta:'+(sseText==='你好，这是流式回复'?'ok':'ERROR['+sseText+']'));

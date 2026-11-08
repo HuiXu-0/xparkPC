@@ -3,33 +3,56 @@
    数据层改为对接便携版本地 FastAPI 服务（同源 /api/*），无模拟数据。
    源码：web-frontend-lite/，构建产物：frontend/index.html */
 
+/* 图标统一来自 Morphicons 兼容的 Lucide outline 集（24×24，MIT/ISC）。 */
 const PATHS = {
-  spark: 'M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z',
-  home: 'M3 10l9-7 9 7M5 9v12h5v-7h4v7h5V9',
-  chat: 'M21 11a8 8 0 01-8 8H6l-4 3 1-6a8 8 0 118-13h2a8 8 0 018 8z',
-  task: 'M8 4H5v17h14V4h-3M8 2h8v5H8zM8 12l2 2 5-5M8 18h7',
-  book: 'M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3zM12 6v16',
-  tool: 'M14 3a6 6 0 00-7 7L2 15l4 4 5-5a6 6 0 007-7l-4 4-3-3 3-5z',
-  db: 'M20 5c0 2-4 3-8 3S4 7 4 5s4-3 8-3 8 1 8 3zM4 5v14c0 2 4 3 8 3s8-1 8-3V5M4 12c0 2 4 3 8 3s8-1 8-3',
-  settings: 'M10 2h4l1 3 3 1 3 3-2 3 1 3-3 3-3-1-3 2-3-2-3 1-3-3 1-3-1-3 3-3 3 1 1-3zM15 12a3 3 0 11-6 0 3 3 0 016 0',
-  moon: 'M20 15A8 8 0 119 3a7 7 0 0011 12z',
-  power: 'M12 2v10M6 5a9 9 0 1012 0',
-  stop: 'M5 5h14v14H5z',
-  cpu: 'M6 6h12v12H6zM9 9h6v6H9zM9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4',
-  shield: 'M12 2l8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4zM8 12l3 3 5-6',
-  plus: 'M12 4v16M4 12h16',
-  arrow: 'M5 12h14M13 6l6 6-6 6',
-  menu: 'M3 5h18M3 12h18M3 19h18',
-  upload: 'M12 16V3M7 8l5-5 5 5M4 15v6h16v-6',
-  file: 'M6 2h8l5 5v15H6zM14 2v6h5M9 12h7M9 16h7',
-  trash: 'M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14',
-  refresh: 'M20 11a8 8 0 10-2 6M20 5v6h-6'
+  spark: '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4m2-2h-4"/><circle cx="4" cy="20" r="2"/>',
+  home: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  chat: '<path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092a10 10 0 1 0-4.777-4.719"/>',
+  task: '<path d="M3 5h.01M3 12h.01M3 19h.01M8 5h13M8 12h13M8 19h13"/>',
+  book: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/>',
+  tool: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/>',
+  db: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/>',
+  settings: '<path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/>',
+  moon: '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>',
+  power: '<path d="M12 2v10m6.4-5.4a9 9 0 1 1-12.77.04"/>',
+  stop: '<rect width="18" height="18" x="3" y="3" rx="2"/>',
+  cpu: '<path d="M12 20v2m0-20v2m5 16v2m0-20v2M2 12h2m-2 5h2M2 7h2m16 5h2m-2 5h2M20 7h2M7 20v2M7 2v2"/><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="8" height="8" x="8" y="8" rx="1"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+  plus: '<path d="M5 12h14m-7-7v14"/>',
+  arrow: '<path d="M5 12h14m-7-7l7 7l-7 7"/>',
+  send: '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11zm7.318-19.539l-10.94 10.939"/>',
+  menu: '<path d="M4 5h16M4 12h16M4 19h16"/>',
+  upload: '<path d="M12 3v12m5-7l-5-5l-5 5m14 7v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>',
+  file: '<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/>',
+  trash: '<path d="M10 11v6m4-6v6m5-11v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  refresh: '<path d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  x: '<path d="M18 6L6 18M6 6l12 12"/>',
+  'chevron-right': '<path d="m9 18l6-6l-6-6"/>',
+  'external-link': '<path d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'
 };
-const icon = n => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (PATHS[n] || PATHS.spark) + '"/></svg>';
+const icon = n => '<svg viewBox="0 0 24 24" aria-hidden="true">' + (PATHS[n] || PATHS.spark) + '</svg>';
 const icons = () => document.querySelectorAll('[data-icon]').forEach(e => { e.innerHTML = icon(e.dataset.icon); });
 const $ = id => document.getElementById(id);
+// 预览面板运行在别的端口时，相对 /api 会打到预览服务器（返回 501），
+// 这时把 API 指回本机 8000；直接从 8000 打开则保持同源相对路径。
+const API_BASE = (() => {
+  try { if (location.port && location.port !== '8000') return location.protocol + '//127.0.0.1:8000'; }
+  catch (e) { /* noop */ }
+  return '';
+})();
+const url = p => /^https?:\/\//.test(p) ? p : API_BASE + p;
 const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const fmt = v => { if (!v) return ''; const d = new Date(v); return isNaN(d) ? String(v) : d.toLocaleString('zh-CN'); };
+const fmt = v => {
+  if (!v) return '';
+  let value = v;
+  if (typeof v === 'number' || /^\d+(\.\d+)?$/.test(String(v))) {
+    value = Number(v);
+    // 后端使用 Unix 秒，JavaScript Date 使用毫秒。
+    if (value < 1000000000000) value *= 1000;
+  }
+  const d = new Date(value);
+  return isNaN(d) ? String(v) : d.toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
+};
 function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.tid); toast.tid = setTimeout(() => { t.hidden = true; }, 3800); }
 function notice(msg) { $('noticeText').textContent = msg || ''; $('notice').hidden = !msg; }
 
@@ -64,7 +87,7 @@ async function api(path, opts) {
   if (TOKEN) h.Authorization = 'Bearer ' + TOKEN;
   if (o.json !== undefined) { h['Content-Type'] = 'application/json'; o.body = JSON.stringify(o.json); delete o.json; }
   let r;
-  try { r = await fetch(path, Object.assign({}, o, { headers: h })); }
+  try { r = await fetch(url(path), Object.assign({}, o, { headers: h })); }
   catch (e) { ONLINE = false; updateTop(); throw new Error('无法连接本地服务，请确认 SparkChat.exe 已启动'); }
   let j = {}; try { j = await r.json(); } catch (e) { /* 非 JSON 响应 */ }
   if (r.status === 401) { needToken(); throw new Error('访问令牌无效，请在「偏好设置」中填写'); }
@@ -76,9 +99,9 @@ async function sse(path, payload, onEvent, signal, method) {
   const h = { 'Content-Type': 'application/json' };
   if (TOKEN) h.Authorization = 'Bearer ' + TOKEN;
   const m = method || 'POST';
-  let r = await fetch(path, { method: m, headers: h, body: m === 'GET' ? undefined : JSON.stringify(payload || {}), signal });
+  let r = await fetch(url(path), { method: m, headers: h, body: m === 'GET' ? undefined : JSON.stringify(payload || {}), signal });
   if (r.status === 405 && m !== 'GET') {
-    r = await fetch(path, { method: 'GET', headers: TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}, signal });
+    r = await fetch(url(path), { method: 'GET', headers: TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}, signal });
   }
   if (r.status === 401) { needToken(); throw new Error('访问令牌无效'); }
   if (!r.ok || !r.body) throw new Error('流式连接失败 (' + r.status + ')');
@@ -152,49 +175,47 @@ function updateTop() {
   el.innerHTML = '<span class="dot ' + (ONLINE ? 'green' : '') + '"></span>' + label;
 }
 function renderHistory() {
-  const list = SESSIONS.slice(0, 6);
-  $('history').innerHTML = list.length
-    ? list.map(x => '<button data-session="' + esc(x.id) + '" title="' + esc(x.title) + '">' + esc(x.title || '新对话') + '</button>').join('')
-    : '<div style="font-size:11px;color:var(--muted);padding:9px 16px">开始对话后，会话将在此保存</div>';
+  const list = SESSIONS.slice(0, 5);
+  const items = list.length
+    ? list.map(x => '<div class="history-item' + (CURRENT === x.id ? ' active' : '') + '"><button data-session="' + esc(x.id) + '" title="' + esc(x.title || '新对话') + '">' + icon('chat') + '<span class="history-title">' + esc(x.title || '新对话') + '</span></button>' +
+        '<button class="history-del" data-del-session="' + esc(x.id) + '" title="删除该会话" aria-label="删除会话">' + icon('x') + '</button></div>').join('')
+    : '<div class="history-empty">还没有会话，点上方按钮新建</div>';
+  $('history').innerHTML = '<button class="history-new" id="newChatSide">' + icon('plus') + '新建对话</button>' + items;
 }
 function renderRight() {
   const m = MODELS.find(x => x.id === SELMODEL) || MODELS[0] || {};
   const cur = SESSIONS.find(x => x.id === CURRENT);
   const ready = RUNTIME ? RUNTIME.ready : ONLINE;
-  const steps = [
-    ['1', '启动内置引擎', '随包 llama.cpp 自动加载 GGUF 权重'],
-    ['2', '描述你的问题', 'GPU 加速流式输出，可随时停止'],
-    ['3', '用后直接关闭', '会话与资料留在项目 data/ 目录']
-  ];
+  const engine = RUNTIME ? String(RUNTIME.engine || 'llama.cpp').replace(/\s*\(.*$/, '') : 'OpenAI 兼容服务';
+  const backend = RUNTIME ? (RUNTIME.backendLabel || '本地推理') : '外部服务';
+  const listen = (CFG.host || '127.0.0.1') + ':' + (CFG.port || 8000);
   $('right').innerHTML = `
-    <section class="panel">
-      <div class="model-head"><h2>内置模型</h2><span class="chip" style="padding:2px 8px;font-size:9px">SPARK-X2.6</span></div>
-      <div class="model-symbol" data-icon="cpu"></div>
-      <div class="model-name">${esc(RUNTIME ? RUNTIME.displayName : (m.name || 'Spark-X2.6-4B'))}</div>
-      <div class="model-version">${RUNTIME ? '内置 ' + esc(RUNTIME.engine) + ' · ' + esc(RUNTIME.backendLabel) : '本机 OpenAI 兼容服务 · 免 API Key'}</div>
-      <div class="model-status"><span class="dot ${ready ? 'green' : ''}" id="stateDot"></span><b id="stateText">${(RUNTIME && RUNTIME.ready) ? '内置引擎已就绪' : (ONLINE ? '引擎加载中' : '服务未连接')}</b></div>
-      <p class="model-description" id="stateDesc">${RUNTIME ? '内置端点 ' + esc(RUNTIME.baseUrl) + ' · 权重随包内置，无需联网' : '推理端点 ' + esc(CFG.spark_base_url || 'http://127.0.0.1:11434/v1')}</p>
+    <section class="panel model-panel">
+      <div class="model-head"><h2>模型与运行状态</h2><span class="chip">LOCAL</span></div>
+      <div class="model-identity">
+        <div class="model-symbol" data-icon="cpu"></div>
+        <div><div class="model-name">${esc(RUNTIME ? RUNTIME.displayName : (m.name || 'Spark-X2.6-4B'))}</div>
+        <div class="model-version">${RUNTIME ? '4B 参数 · Q4_K_M 量化' : '本机 OpenAI 兼容服务'}</div></div>
+      </div>
+      <div class="model-status"><span class="dot ${ready ? 'green' : ''}" id="stateDot"></span><b id="stateText">${(RUNTIME && RUNTIME.ready) ? '引擎就绪，可以对话' : (ONLINE ? '引擎加载中' : '服务未连接')}</b></div>
+      <p class="model-description" id="stateDesc">${RUNTIME ? '本地离线推理，无需安装 Ollama。' : '推理端点 ' + esc(CFG.spark_base_url || 'http://127.0.0.1:11434/v1')}</p>
       <select class="search" id="modelSel" aria-label="选择模型">
         ${MODELS.length ? MODELS.map(x => '<option value="' + esc(x.id) + '"' + (x.id === SELMODEL ? ' selected' : '') + '>' + esc(RUNTIME && RUNTIME.displayName ? RUNTIME.displayName : x.name) + '</option>').join('') : '<option value="">加载中…</option>'}
       </select>
-      <button class="btn primary full" id="testConn">${icon('power')}测试连接</button>
-      <button class="btn outline full release" id="refreshAll">${icon('refresh')}刷新状态</button>
+      <div class="model-actions"><button class="btn primary" id="testConn">${icon('power')}测试连接</button>
+        <button class="icon-btn" id="refreshAll" title="刷新状态" aria-label="刷新状态">${icon('refresh')}</button></div>
       <div class="memory">
-        <label>当前会话 <small>自动保存在本地服务</small></label>
-        <strong style="font-size:14px">${esc(cur ? (cur.title || '新对话') : '新对话')}</strong>
-        <div class="progress"><div style="width:${SESSIONS.length ? Math.min(100, SESSIONS.length * 8) : 0}%"></div></div>
-        <small>共 ${SESSIONS.length} 个会话 · ${MODELS.length} 个可用模型</small>
+        <label>当前会话 <small>本地自动保存</small></label>
+        <strong>${esc(cur ? (cur.title || '新对话') : '新对话')}</strong>
+        <small>共 ${SESSIONS.length} 个本地会话</small>
       </div>
       <div class="specs">
-        <div><span>监听地址</span><b>${esc((CFG.host || '127.0.0.1') + ':' + (CFG.port || 8000))}</b></div>
-        <div><span>推理后端</span><b>${esc(RUNTIME ? RUNTIME.backendLabel + ' · ' + RUNTIME.profile : '外部服务')}</b></div>
-        <div><span>知识库</span><b>${esc((KBSTAT.docs != null ? KBSTAT.docs : DOCS.length))} 份资料</b></div>
+        <div><span>推理引擎</span><b title="${esc(engine)}">${esc(engine)}</b></div>
+        <div><span>计算设备</span><b title="${esc(backend)}">${esc(backend)}</b></div>
+        <div><span>本地服务</span><b>${esc(listen)}</b></div>
       </div>
     </section>
-    <section class="panel steps-panel"><h3>轻松开始一次本地对话</h3>
-      ${steps.map(s => '<div class="step"><span class="num">' + s[0] + '</span><div><b>' + s[1] + '</b><br>' + s[2] + '</div></div>').join('')}
-    </section>
-    <div class="privacy">${icon('shield')}<span>模型与推理引擎已内置，不依赖本机 Ollama；对话、资料与配置全部保存在项目 data/ 目录，不会上传到云端。</span></div>`;
+    <div class="privacy">${icon('shield')}<span>模型、会话与资料均保存在本机，不会上传到云端。</span></div>`;
 }
 function render() {
   const views = { home, chat, tasks: tasksPage, knowledge, tools: toolsPage, storage, settings };
@@ -215,27 +236,31 @@ function composer() {
       <div class="composer-left"><button class="icon-btn" id="attach" aria-label="导入资料">${icon('plus')}</button>
         <span>Enter 发送 · Shift + Enter 换行 · <span id="composerModel">${esc(modelName(SELMODEL))}</span></span></div>
       <div><button class="btn outline" id="stop" hidden>停止生成</button>
-        <button class="btn primary" id="send">${icon('arrow')}发送问题</button></div>
+        <button class="btn primary" id="send">${icon('send')}发送问题</button></div>
     </div></div>`;
 }
 function home() {
-  return `<section class="hero"><div class="eyebrow">YOUR LOCAL AI WORKSPACE</div><h1>今天，让灵感<em>更进一步。</em></h1>
+  return `<div class="home-hero">
+      <section class="hero"><div class="eyebrow">SPARK · LOCAL AI WORKSPACE</div><h1>今天，让灵感<em>更进一步。</em></h1>
       <p>从一个问题开始。模型在本机推理，会话与资料留在本地。</p></section>
-    ${composer()}
-    <div class="suggestions">${SUGGESTIONS.map(s => '<button data-suggest="' + esc(s) + '">' + esc(s) + '</button>').join('')}</div>
+      ${composer()}
+      <div class="suggestions">${SUGGESTIONS.map(s => '<button data-suggest="' + esc(s) + '">' + esc(s) + '</button>').join('')}</div>
+    </div>
     <div class="section-head"><h2>探索你的智能工作空间</h2><span>从想法到行动</span></div>
-    <div class="features">${FEATURES.map(x => `<button class="feature" data-page="${x[0]}"><span class="feature-icon">${icon(x[1])}</span><div><strong>${x[2]}</strong><p>${x[3]}</p></div><span class="arrow">›</span></button>`).join('')}</div>
+    <div class="features">${FEATURES.map(x => `<button class="feature" data-page="${x[0]}"><span class="feature-icon">${icon(x[1])}</span><div><strong>${x[2]}</strong><p>${x[3]}</p></div><span class="arrow">${icon('chevron-right')}</span></button>`).join('')}</div>
     <div class="section-head"><h2>最近会话</h2><span>保存在 data/chats</span></div>
     <div class="recent">${SESSIONS.length ? SESSIONS.slice(0, 3).map(s => `<div class="recent-item"><div class="round">${icon('chat')}</div>
       <div><strong>${esc(s.title || '新对话')}</strong><small>${fmt(s.updated_at || s.created_at)} · ${esc(s.message_count || 0)} 条消息</small></div>
-      <button data-session="${esc(s.id)}">继续对话 ↗</button></div>`).join('') : '<div class="empty-recent">还没有会话。在上方输入第一个问题，开始对话吧。</div>'}</div>`;
+      <button data-session="${esc(s.id)}">继续对话 ${icon('external-link')}</button></div>`).join('') : '<div class="empty-recent">还没有会话。在上方输入第一个问题，开始对话吧。</div>'}</div>`;
 }
 function chat() {
   const s = SESSIONS.find(x => x.id === CURRENT);
+  // 早期失败请求可能留下空 assistant 消息，不渲染成只有标题的空气泡。
+  const messages = CHAT.filter(m => m.role === 'user' || String(m.content || m.text || '').trim());
   return `<div class="section-head" style="margin-top:0"><div><div class="eyebrow">LOCAL CONVERSATION</div>
       <h1 class="page-title">${esc(s ? (s.title || '新对话') : '开始一段新对话')}</h1></div>
       <div class="row"><button class="btn outline" id="renameChat">重命名</button><button class="btn outline" id="newChat">${icon('plus')}新对话</button></div></div>
-    <div class="chat-log" id="chatLog">${CHAT.length ? CHAT.map(m => `<div class="message ${esc(m.role)}"><small>${m.role === 'user' ? '你' : 'Spark Chat'}</small>${esc(m.content || m.text || '')}</div>`).join('') : '<div class="info">消息由本地服务保存。选择右侧模型后即可开始对话；Enter 发送，Shift + Enter 换行。</div>'}</div>
+    <div class="chat-log" id="chatLog">${messages.length ? messages.map(m => `<div class="message ${esc(m.role)}"><small>${m.role === 'user' ? '你' : 'Spark Chat'}</small>${esc(m.content || m.text || '')}</div>`).join('') : '<div class="info">消息由本地服务保存。选择右侧模型后即可开始对话；Enter 发送，Shift + Enter 换行。</div>'}</div>
     ${composer()}`;
 }
 function tasksPage() {
@@ -371,7 +396,15 @@ async function openSession(id) {
   catch (e) { toast(e.message); }
   PAGE = 'chat'; render();
 }
-function newChat() { CURRENT = null; CHAT = []; PAGE = 'chat'; render(); const p = $('prompt'); if (p) p.focus(); }
+async function newChat() {
+  try {
+    const c = await api('/api/conversations', { method: 'POST', json: {} });
+    CURRENT = (c && c.id) || null;
+    await refreshSessions();
+  } catch (e) { CURRENT = null; }
+  CHAT = []; PAGE = 'chat'; render();
+  const p = $('prompt'); if (p) p.focus();
+}
 function setPrompt(v) { if (PAGE !== 'chat') { PAGE = 'chat'; CHAT = []; render(); } const p = $('prompt'); if (p) { p.value = v; p.focus(); } }
 function stopGeneration() { if (CTRL) { try { CTRL.abort(); } catch (e) { /* noop */ } } GENERATING = false; setGeneratingUI(false); }
 async function send() {
@@ -400,7 +433,12 @@ async function send() {
     if (CURRENT) await openSession(CURRENT);
   } catch (e) {
     if (e.name !== 'AbortError') { toast(e.message); if (!full && aSpan) aSpan.textContent = '（生成失败：' + e.message + '）'; }
-  } finally { GENERATING = false; CTRL = null; setGeneratingUI(false); }
+  } finally {
+    GENERATING = false; CTRL = null; setGeneratingUI(false);
+    // 对话完成后保持输入框聚焦，避免每轮都要再点一次
+    const p = $('prompt');
+    if (p && PAGE === 'chat') { p.focus(); p.setSelectionRange(p.value.length, p.value.length); }
+  }
 }
 
 /* ---------- 智能任务 ---------- */
@@ -482,7 +520,7 @@ async function saveSettings() {
 }
 async function download(path, name, method) {
   const h = TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {};
-  const r = await fetch(path, { method: method || 'POST', headers: h });
+  const r = await fetch(url(path), { method: method || 'POST', headers: h });
   if (!r.ok) throw new Error('导出失败 (' + r.status + ')');
   const b = await r.blob(), u = URL.createObjectURL(b), a = document.createElement('a');
   a.href = u; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(u), 2000);
@@ -504,7 +542,7 @@ function toggleTheme() {
 
 /* ---------- 事件 ---------- */
 document.addEventListener('click', async e => {
-  const n = e.target.closest('[data-page],[data-suggest],[data-session],[data-template],[data-del-doc],[data-task],[data-restore],[data-del-backup]');
+  const n = e.target.closest('[data-page],[data-suggest],[data-session],[data-template],[data-del-doc],[data-del-session],[data-task],[data-restore],[data-del-backup]');
   if (n) {
     if (n.dataset.page) return go(n.dataset.page);
     if (n.dataset.suggest || n.dataset.template) return setPrompt(n.dataset.suggest || n.dataset.template);
@@ -512,6 +550,16 @@ document.addEventListener('click', async e => {
     if (n.dataset.task) {
       try { const t = await api('/api/tasks/' + encodeURIComponent(n.dataset.task)); toast((t && (t.title || '任务')) + ' · ' + (t && t.status || '')); }
       catch (err) { toast(err.message); }
+      return;
+    }
+    if (n.dataset.delSession) {
+      const sid = n.dataset.delSession;
+      if (!await confirmBox('删除会话', '确定删除这个会话及其全部消息？此操作不可撤销。')) return;
+      try {
+        await api('/api/conversations/' + encodeURIComponent(sid), { method: 'DELETE' });
+        if (CURRENT === sid) { CURRENT = null; CHAT = []; }
+        await refreshSessions(); render(); toast('会话已删除');
+      } catch (err) { toast(err.message); }
       return;
     }
     if (n.dataset.delDoc) {
@@ -534,7 +582,7 @@ document.addEventListener('click', async e => {
   switch (id) {
     case 'send': send(); break;
     case 'stop': stopGeneration(); toast('已停止生成'); break;
-    case 'newChat': newChat(); break;
+    case 'newChat': case 'newChatSide': newChat(); break;
     case 'renameChat': {
       if (!CURRENT) return toast('请先开始一段对话');
       const s = SESSIONS.find(x => x.id === CURRENT);
